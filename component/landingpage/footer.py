@@ -1,15 +1,25 @@
 import reflex as rx
 
 
-def _footer_column(title: str, links: list[str]) -> rx.Component:
+def _footer_column(title: str, links: list[object]) -> rx.Component:
+    def _as_link(item: object) -> tuple[str, str]:
+        # Supports either:
+        # - "Explore" (defaults to href="#")
+        # - {"label": "Pricing", "href": "/pricingpage"}
+        if isinstance(item, dict):
+            label = item.get("label", "")
+            href = item.get("href", "#")
+            return str(label), str(href)
+        return str(item), "#"
+
     return rx.box(
         rx.heading(title, as_="h4", class_name="font-headline text-lg mb-8"),
         rx.el.ul(
             *[
                 rx.el.li(
                     rx.link(
-                        item,
-                        href="#",
+                        _as_link(item)[0],
+                        href=_as_link(item)[1],
                         class_name="text-slate-400 hover:text-lime-400 text-sm transition-colors underline-offset-4 hover:underline",
                     )
                 )
@@ -35,7 +45,15 @@ def footer() -> rx.Component:
                         class_name="text-slate-400 text-sm leading-relaxed max-w-xs",
                     ),
                 ),
-                _footer_column("Platform", ["Explore", "Pricing", "AI Advisor", "Market Analytics"]),
+                _footer_column(
+                    "Platform", 
+                    [
+                        {"label": "Explore", "href": "/explorepage"},
+                        {"label": "Pricing", "href": "/pricingpage"},
+                        "AI Advisor",
+                        "Market Analytics"
+                    ]
+                ),
                 _footer_column("Company", ["About Us", "Careers", "Newsroom", "Investor Relations"]),
                 _footer_column("Legal", ["Terms", "Privacy", "Cookie Policy", "Whistleblowing"]),
                 class_name="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-28",

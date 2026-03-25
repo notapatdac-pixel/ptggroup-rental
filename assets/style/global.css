@@ -288,6 +288,20 @@ h3 {
   }
 }
 
+/* Explore page helpers */
+.map-gradient-overlay {
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.1), transparent);
+}
+
+.fill-icon {
+  font-variation-settings: "FILL" 1;
+}
+
+/* Leaflet tooltips used on explore page */
+.ptg-leaflet-tooltip .leaflet-tooltip-content {
+  margin: 0 !important;
+}
+
 /* Featured Opportunities: full-bleed photo bg (static, not carousel) + light scrim for readability */
 .featured-opportunities-section {
   background-color: var(--surface-container-low);
