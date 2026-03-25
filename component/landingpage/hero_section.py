@@ -58,7 +58,7 @@ def hero_section() -> rx.Component:
                                 class_name="text-xl text-on-surface leading-relaxed mb-10 max-w-xl",
                             ),
                             rx.hstack(
-                                rx.el.button(
+                                rx.link(
                                     rx.hstack(
                                         rx.text("Explore Locations"),
                                         rx.el.span(
@@ -67,8 +67,12 @@ def hero_section() -> rx.Component:
                                         ),
                                         class_name="flex items-center gap-2",
                                     ),
-                                    type="button",
-                                    class_name="group inline-flex items-center justify-center primary-gradient text-white px-26 py-4 rounded-md text-base font-bold border-0 cursor-pointer transition-all hover:shadow-lg hover:shadow-lime-600/40",
+                                    href="/explorepage",
+                                    class_name=(
+                                        "group inline-flex items-center justify-center primary-gradient text-white "
+                                        "px-26 py-4 rounded-md text-base font-bold border-0 cursor-pointer "
+                                        "transition-all hover:shadow-lg hover:shadow-lime-600/40 no-underline"
+                                    ),
                                 ),
                                 rx.el.button(
                                     "Get Started",

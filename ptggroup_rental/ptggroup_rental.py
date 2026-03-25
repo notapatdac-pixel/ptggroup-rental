@@ -1,7 +1,8 @@
 import reflex as rx
+from pages.explorepage.explorePage import explore_page
 from pages.landingpage.landingPage import landing_page
 from pages.pricingpage.pricingPage import pricing_page
-from pages.explorepage.explorePage import explore_page
+from pages.stationdetailpage.stationDetailsPage import station_detail_page
 
 
 app = rx.App(
@@ -15,3 +16,8 @@ app = rx.App(
 app.add_page(landing_page, route="/", title="PTG Retail Platform | Thailand's Premier Retail Marketplace")
 app.add_page(pricing_page, route="/pricingpage", title="PTG Retail Platform | Pricing")
 app.add_page(explore_page, route="/explorepage", title="PTG Retail Platform | Explore Locations")
+app.add_page(
+    station_detail_page,
+    route="/stationdetailpage/[station_id]",
+    title="PTG Retail Platform | Station",
+)

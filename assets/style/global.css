@@ -75,6 +75,10 @@ h3 {
   background: linear-gradient(135deg, #466800 0%, #96c93e 100%);
 }
 
+.editorial-shadow {
+  box-shadow: 0px 24px 48px -12px rgba(25, 28, 28, 0.06);
+}
+
 /* White / outline CTAs: force visible lime hover (avoids missing utility output) */
 .btn-lime-outline:hover {
   background-color: rgb(236 252 203);

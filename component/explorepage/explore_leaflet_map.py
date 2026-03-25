@@ -2,52 +2,11 @@ import json
 
 import reflex as rx
 
-
-_STATION_MARKERS = [
-    {
-        "id": "latphrao71",
-        "title": "PTG Station Lat Phrao 71",
-        "province": "Bangkok",
-        "traffic_level": "high",
-        "spaces_count": 3,
-        "lat": 13.8046,
-        "lng": 100.5800,
-        "location": "Bangkok · 2.4 km away",
-        "traffic_badge": "High Traffic",
-        "match_badge": "98% Match",
-        "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuAogYrPXv2k3xHfrvbGuzO2u9H021UfnjMDMLdrEuLu2gcWwSPbve71JZORUMDDO8zIqCI0qJ1BsPvzeI2XvXsUIlY9K58cfYcjOMUAWR2_i49F1_jWhThLLarbsBYMgxgc4v0VRqRj9eIjeaYHEFJuJHKGOCdjYH-9rNAX2Nh5sR-96NsIkkQicdlwhVgxMatMoIjNU8gdA3_D_drXtDmqGuAEX8DPF9T8cRvga1fGTTE_a2KHsAQ5jWufQ47tXLdN87UwcjOhK4Q",
-    },
-    {
-        "id": "ramaix",
-        "title": "PTG Station Rama IX",
-        "province": "Bangkok",
-        "traffic_level": "medium",
-        "spaces_count": 5,
-        "lat": 13.7500,
-        "lng": 100.5650,
-        "location": "Bangkok · 5.1 km away",
-        "traffic_badge": "Medium Traffic",
-        "match_badge": "92% Match",
-        "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuB1XxKMY6FJqo6lJ8jPB-SDQcmEdz1BGe1moAtnxPkXaE82_zwaznYWAnNMvLgUTjz3bkjFvZeSOD-qBHB6XnZmYHrz9yTFk8xIw2xJWi8aN23rFnPM54otIauhJHSX5S_Uhz9OcmG9tRBR2XpLp0qdbts3bwiDPzho2Es8p_WCV7x1v_1HQ0UVhh4AjPQcbJKfIrLX3yFBdzQxm9pSBNvFh_kw6Ge_u_v818HARIcLfsm_P3S4Ku7CyHiA0rGDHIOLCRR1VQ0yOsY",
-    },
-    {
-        "id": "bangna",
-        "title": "PTG Station Bang Na",
-        "province": "Samut Prakan",
-        "traffic_level": "high",
-        "spaces_count": 1,
-        "lat": 13.6740,
-        "lng": 100.5930,
-        "location": "Samut Prakan · 12.8 km away",
-        "traffic_badge": "High Traffic",
-        "match_badge": "85% Match",
-        "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuCA1MuAJaNhJiEsiDcqskadl4jthvCv3RRv8V3kePz311obEN72Bl5XlnODxBKTtH2HcQQ81ZgsvXMaj3PbOS_l8tndMBg_nuwhVyxl9SukBnO91yFKDU6kxOuu951CaFp80ln54VmlOKK9KZnl7L-imZ5qj675tbgYkJiDd0PImdorHHiJxO67x6IvhB9xtpEI0lpiYXeiuWA2iEn2BEvZytquIlJ2d7iJLov2gJt7eUgkRa65IEKjLmfzYoefpJ7EI-h7lCe-KKo",
-    },
-]
+from component.explorepage.stations_catalog import markers_for_leaflet
 
 
 def explore_leaflet_map() -> rx.Component:
-    markers_json = json.dumps(_STATION_MARKERS)
+    markers_json = json.dumps(markers_for_leaflet())
 
     # HTML for a small “card-like” tooltip (matching the right panel summary).
     # Note: we inline styles because global Tailwind classes won't apply inside Leaflet tooltip reliably.
@@ -155,9 +114,8 @@ def explore_leaflet_map() -> rx.Component:
           marker.on('mouseover', () => marker.openTooltip());
           marker.on('mouseout', () => marker.closeTooltip());
 
-          // Click should behave like “select station” - open tooltip and highlight.
           marker.on('click', () => {{
-            marker.openTooltip();
+            window.location.href = '/stationdetailpage/' + encodeURIComponent(m.id);
           }});
         }});
 

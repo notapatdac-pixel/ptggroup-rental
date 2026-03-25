@@ -1,55 +1,12 @@
 import reflex as rx
 
-
-_STATIONS = [
-    {
-        "id": "latphrao71",
-        "title": "PTG Station Lat Phrao 71",
-        "province": "Bangkok",
-        "traffic_level": "high",
-        "location": "Bangkok · 2.4 km away",
-        "match_badge": "98% Match",
-        "traffic_badge": "High Traffic",
-        "traffic_badge_class": "bg-on-secondary-container/10 text-on-secondary-container",
-        "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuAogYrPXv2k3xHfrvbGuzO2u9H021UfnjMDMLdrEuLu2gcWwSPbve71JZORUMDDO8zIqCI0qJ1BsPvzeI2XvXsUIlY9K58cfYcjOMUAWR2_i49F1_jWhThLLarbsBYMgxgc4v0VRqRj9eIjeaYHEFJuJHKGOCdjYH-9rNAX2Nh5sR-96NsIkkQicdlwhVgxMatMoIjNU8gdA3_D_drXtDmqGuAEX8DPF9T8cRvga1fGTTE_a2KHsAQ5jWufQ47tXLdN87UwcjOhK4Q",
-        "max_area": ("Max Area", "45 sqm"),
-        "available": ("Available", "3 Spaces"),
-        "spaces_count": 3,
-    },
-    {
-        "id": "ramaix",
-        "title": "PTG Station Rama IX",
-        "province": "Bangkok",
-        "traffic_level": "medium",
-        "location": "Bangkok · 5.1 km away",
-        "match_badge": "92% Match",
-        "traffic_badge": "Medium Traffic",
-        "traffic_badge_class": "bg-tertiary-container/20 text-on-tertiary-container",
-        "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuB1XxKMY6FJqo6lJ8jPB-SDQcmEdz1BGe1moAtnxPkXaE82_zwaznYWAnNMvLgUTjz3bkjFvZeSOD-qBHB6XnZmYHrz9yTFk8xIw2xJWi8aN23rFnPM54otIauhJHSX5S_Uhz9OcmG9tRBR2XpLp0qdbts3bwiDPzho2Es8p_WCV7x1v_1HQ0UVhh4AjPQcbJKfIrLX3yFBdzQxm9pSBNvFh_kw6Ge_u_v818HARIcLfsm_P3S4Ku7CyHiA0rGDHIOLCRR1VQ0yOsY",
-        "max_area": ("Max Area", "120 sqm"),
-        "available": ("Available", "5 Spaces"),
-        "spaces_count": 5,
-    },
-    {
-        "id": "bangna",
-        "title": "PTG Station Bang Na",
-        "province": "Samut Prakan",
-        "traffic_level": "high",
-        "location": "Samut Prakan · 12.8 km away",
-        "match_badge": "85% Match",
-        "traffic_badge": "High Traffic",
-        "traffic_badge_class": "bg-secondary-container/30 text-on-secondary-container",
-        "image": "https://lh3.googleusercontent.com/aida-public/AB6AXuCA1MuAJaNhJiEsiDcqskadl4jthvCv3RRv8V3kePz311obEN72Bl5XlnODxBKTtH2HcQQ81ZgsvXMaj3PbOS_l8tndMBg_nuwhVyxl9SukBnO91yFKDU6kxOuu951CaFp80ln54VmlOKK9KZnl7L-imZ5qj675tbgYkJiDd0PImdorHHiJxO67x6IvhB9xtpEI0lpiYXeiuWA2iEn2BEvZytquIlJ2d7iJLov2gJt7eUgkRa65IEKjLmfzYoefpJ7EI-h7lCe-KKo",
-        "max_area": ("Max Area", "32 sqm"),
-        "available": ("Available", "1 Space"),
-        "spaces_count": 1,
-    },
-]
+from component.explorepage.stations_catalog import STATIONS
 
 
 def _station_card(station: dict) -> rx.Component:
-    return rx.el.div(
+    return rx.link(
         rx.el.div(
+            rx.el.div(
             rx.el.img(
                 src=station["image"],
                 alt=station["title"],
@@ -109,10 +66,13 @@ def _station_card(station: dict) -> rx.Component:
                 class_name="grid grid-cols-2 gap-4 my-4",
             ),
             rx.el.div(
-                rx.el.button(
+                rx.el.span(
                     "View Details",
-                    type="button",
-                    class_name="flex-1 bg-gradient-to-tr from-primary to-primary-container text-white text-xs font-bold py-3 rounded-lg hover:brightness-110 transition-all active:scale-95",
+                    class_name=(
+                        "flex-1 text-center bg-gradient-to-tr from-primary to-primary-container "
+                        "text-white text-xs font-bold py-3 rounded-lg hover:brightness-110 transition-all "
+                        "active:scale-95 inline-block w-full"
+                    ),
                 ),
                 class_name="flex gap-2 pt-2",
             ),
@@ -126,6 +86,9 @@ def _station_card(station: dict) -> rx.Component:
             "data-spaces": str(station["spaces_count"]),
         },
         class_name="group bg-white rounded-xl border border-transparent hover:border-primary/20 hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer",
+        ),
+        href=f"/stationdetailpage/{station['id']}",
+        class_name="no-underline block text-inherit",
     )
 
 
@@ -222,7 +185,7 @@ def explore_station_list() -> rx.Component:
                 class_name="p-6 border-b border-surface-container",
             ),
             rx.el.div(
-                *[_station_card(s) for s in _STATIONS],
+                *[_station_card(s) for s in STATIONS],
                 class_name="flex-1 overflow-y-auto p-6 space-y-6",
             ),
             class_name="w-[480px] h-full bg-white flex flex-col shadow-2xl z-10",
