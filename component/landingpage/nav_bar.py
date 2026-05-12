@@ -19,10 +19,10 @@ def nav_bar(show_search: bool = False) -> rx.Component:
     )
 
     right_actions = rx.hstack(
-        rx.el.button(
+        rx.link(
             "Sign In",
-            type="button",
-            class_name="btn-lime-ghost inline-flex items-center justify-center bg-transparent text-slate-600 dark:text-slate-400 font-sans text-sm px-4 py-2 border-0 cursor-pointer rounded-md transition-colors",
+            href="/loginpage",
+            class_name="btn-lime-ghost inline-flex items-center justify-center bg-transparent text-slate-600 dark:text-slate-400 font-sans text-sm px-4 py-2 border-0 cursor-pointer rounded-md transition-colors no-underline",
         ),
         rx.el.button(
             "Get Started",
