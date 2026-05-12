@@ -10,6 +10,7 @@ def _pricing_plan_card(
     description: str,
     items: list[str],
     button_text: str,
+    href: str,
     featured: bool = False,
 ) -> rx.Component:
     # Use the same plan styling language as the landing page preview cards.
@@ -44,11 +45,11 @@ def _pricing_plan_card(
             ],
             class_name="space-y-4 mb-12 flex-grow",
         ),
-        rx.el.button(
+        rx.link(
             button_text,
-            type="button",
+            href=href,
             class_name=(
-                "w-full py-4 px-6 rounded-md font-bold text-xs tracking-widest uppercase transition-all cursor-pointer"
+                "w-full py-4 px-6 rounded-md font-bold text-xs tracking-widest uppercase transition-all cursor-pointer no-underline inline-flex items-center justify-center"
                 + (
                     " primary-gradient text-on-primary shadow-lg shadow-primary/20 hover:brightness-110 active:scale-95"
                     if featured
@@ -88,6 +89,7 @@ def pricing_cards_section() -> rx.Component:
                 description="Start exploring retail opportunities.",
                 items=["Browse all listings", "Apply for 2 spaces"],
                 button_text="Get started free",
+                href="/createaccountpage",
             ),
             _pricing_plan_card(
                 title="Pro",
@@ -97,6 +99,7 @@ def pricing_cards_section() -> rx.Component:
                 description="Unlock AI insights to find the best locations.",
                 items=["Everything in Free", "AI recommendations", "Traffic analytics"],
                 button_text="Start Pro",
+                href="/checkoutpage/pro",
                 featured=True,
             ),
             _pricing_plan_card(
@@ -107,6 +110,7 @@ def pricing_cards_section() -> rx.Component:
                 description="Full platform with ML predictions and analytics.",
                 items=["Everything in Pro", "ML predictions", "Retailer dashboard"],
                 button_text="Start Growth",
+                href="/checkoutpage/growth",
             ),
             class_name="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32 items-stretch max-w-7xl mx-auto",
         ),

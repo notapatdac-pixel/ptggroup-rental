@@ -10,10 +10,10 @@ def bottom_cta() -> rx.Component:
                     "Join 3,890+ retailers scaling their businesses across PTG’s premium nationwide energy and retail network.",
                     class_name="text-xl mb-12 opacity-90 max-w-2xl mx-auto font-body",
                 ),
-                rx.el.button(
+                rx.link(
                     "Get started free",
-                    type="button",
-                    class_name="btn-lime-white-cta inline-flex items-center justify-center bg-white text-on-surface px-10 py-5 rounded-md text-lg font-bold shadow-xl border-0 cursor-pointer transition-all active:scale-95",
+                    href="/createaccountpage",
+                    class_name="btn-lime-white-cta inline-flex items-center justify-center bg-white text-on-surface px-10 py-5 rounded-md text-lg font-bold shadow-xl border-0 cursor-pointer transition-all active:scale-95 no-underline",
                 ),
                 class_name="relative z-10",
             ),

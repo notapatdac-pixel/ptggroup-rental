@@ -74,10 +74,10 @@ def hero_section() -> rx.Component:
                                         "transition-all hover:shadow-lg hover:shadow-lime-600/40 no-underline"
                                     ),
                                 ),
-                                rx.el.button(
+                                rx.link(
                                     "Get Started",
-                                    type="button",
-                                    class_name="btn-lime-outline inline-flex items-center justify-center bg-white/90 px-8 py-4 rounded-md text-base font-bold border border-outline-variant transition-colors text-on-surface cursor-pointer backdrop-blur-sm",
+                                    href="/createaccountpage",
+                                    class_name="btn-lime-outline inline-flex items-center justify-center bg-white/90 px-8 py-4 rounded-md text-base font-bold border border-outline-variant transition-colors text-on-surface cursor-pointer backdrop-blur-sm no-underline",
                                 ),
                                 class_name="flex flex-wrap gap-4",
                             ),

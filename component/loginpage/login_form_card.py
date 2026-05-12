@@ -1,146 +1,123 @@
 import reflex as rx
 
+_LABEL_CLS = "text-[10px] uppercase font-bold tracking-widest text-on-surface-variant mb-1.5 block"
+_INPUT_CLS = (
+    "w-full bg-surface-container-low border-0 border-b-2 border-surface-container-highest "
+    "px-1 py-3 text-on-surface text-sm focus:ring-0 focus:border-primary transition-all "
+    "outline-none placeholder:text-surface-dim"
+)
 
-class LoginFormCardState(rx.ComponentState):
-    password_visible: bool = False
 
-    def toggle_password_visibility(self):
-        self.password_visible = not self.password_visible
+class SignInTabState(rx.ComponentState):
+    tab: str = "retailer"
+
+    def select_retailer(self):
+        self.tab = "retailer"
+
+    def select_landlord(self):
+        self.tab = "landlord"
 
     @classmethod
     def get_component(cls, *children, **props) -> rx.Component:
-        pwd_type = rx.cond(cls.password_visible, "text", "password")
-        visibility_icon = rx.cond(
-            cls.password_visible,
-            rx.el.span(
-                "visibility_off",
-                class_name="material-symbols-outlined text-[20px]",
+        active_cls = (
+            "flex-1 py-2.5 px-6 text-sm font-medium rounded-full bg-white text-on-surface "
+            "shadow-sm transition-all cursor-pointer border-0"
+        )
+        inactive_cls = (
+            "flex-1 py-2.5 px-6 text-sm font-medium rounded-full text-on-surface-variant "
+            "transition-all cursor-pointer border-0 bg-transparent"
+        )
+
+        retailer_active = cls.tab == "retailer"
+
+        tab_toggle = rx.el.div(
+            rx.el.button(
+                "Retailer",
+                type="button",
+                on_click=cls.select_retailer,
+                class_name=rx.cond(retailer_active, active_cls, inactive_cls),
             ),
-            rx.el.span(
-                "visibility",
-                class_name="material-symbols-outlined text-[20px]",
+            rx.el.button(
+                "Landlord",
+                type="button",
+                on_click=cls.select_landlord,
+                class_name=rx.cond(retailer_active, inactive_cls, active_cls),
+            ),
+            class_name=(
+                "flex bg-surface-container rounded-full p-1 mb-6"
             ),
         )
-        return rx.el.div(
-            rx.el.header(
-                rx.el.h2(
-                    "Sign In",
-                    class_name="text-2xl font-headline text-on-surface mb-2",
+
+        email_label = rx.cond(retailer_active, "EMAIL ADDRESS", "CODE")
+
+        apply_link = rx.cond(
+            retailer_active,
+            rx.hstack(
+                rx.text("Don't have an account?", class_name="text-sm text-on-surface-variant"),
+                rx.link(
+                    "Apply for access",
+                    href="/createaccountpage",
+                    class_name="text-sm text-primary font-semibold hover:underline no-underline",
                 ),
-                rx.el.p(
-                    "Enter your credentials to manage your portfolio.",
-                    class_name="text-sm text-on-surface-variant",
-                ),
-                class_name="mb-8",
+                class_name="flex items-center gap-1.5 justify-center mt-4",
             ),
+            rx.fragment(),
+        )
+
+        return rx.box(
+            rx.heading(
+                "Sign In",
+                as_="h1",
+                class_name="font-headline text-3xl text-on-surface text-center mb-6",
+            ),
+            tab_toggle,
             rx.el.form(
                 rx.el.div(
-                    rx.el.label(
-                        "Email Address",
-                        html_for="login-email",
-                        class_name="block text-[10px] uppercase tracking-[0.05em] font-bold text-on-surface-variant",
+                    rx.el.label(email_label, class_name=_LABEL_CLS),
+                    rx.el.input(
+                        placeholder="name@company.com",
+                        type="email",
+                        class_name=_INPUT_CLS,
                     ),
-                    rx.el.div(
-                        rx.el.input(
-                            id="login-email",
-                            name="email",
-                            type="email",
-                            placeholder="name@company.com",
-                            class_name=(
-                                "w-full bg-surface-container-lowest border-0 border-b-2 "
-                                "border-surface-container-highest px-0 py-3 text-on-surface "
-                                "focus:ring-0 focus:border-primary focus:bg-surface-bright "
-                                "transition-all placeholder:text-surface-dim"
-                            ),
-                        ),
-                        class_name="relative",
-                    ),
-                    class_name="space-y-1.5",
+                    class_name="flex flex-col",
                 ),
                 rx.el.div(
-                    rx.el.div(
-                        rx.el.label(
-                            "Password",
-                            html_for="login-password",
-                            class_name="block text-[10px] uppercase tracking-[0.05em] font-bold text-on-surface-variant",
-                        ),
+                    rx.hstack(
+                        rx.el.label("PASSWORD", class_name=_LABEL_CLS),
                         rx.link(
                             "Forgot?",
                             href="#",
                             class_name=(
-                                "text-[10px] uppercase tracking-[0.05em] font-bold text-primary "
-                                "hover:text-primary-container transition-colors no-underline"
+                                "text-[10px] uppercase font-bold tracking-widest text-primary "
+                                "hover:text-primary/70 transition-colors no-underline"
                             ),
                         ),
-                        class_name="flex justify-between items-end",
+                        class_name="flex justify-between items-center mb-1.5",
                     ),
-                    rx.el.div(
-                        rx.el.input(
-                            id="login-password",
-                            name="password",
-                            type=pwd_type,
-                            placeholder="••••••••",
-                            class_name=(
-                                "w-full bg-surface-container-lowest border-0 border-b-2 "
-                                "pr-10 border-surface-container-highest px-0 py-3 text-on-surface "
-                                "focus:ring-0 focus:border-primary focus:bg-surface-bright "
-                                "transition-all placeholder:text-surface-dim"
-                            ),
-                        ),
-                        rx.el.button(
-                            visibility_icon,
-                            type="button",
-                            on_click=cls.toggle_password_visibility,
-                            class_name=(
-                                "absolute right-0 top-1/2 -translate-y-1/2 "
-                                "text-on-surface-variant/50 hover:text-on-surface border-0 bg-transparent cursor-pointer p-1"
-                            ),
-                        ),
-                        class_name="relative",
+                    rx.el.input(
+                        placeholder="••••••••",
+                        type="password",
+                        class_name=_INPUT_CLS,
                     ),
-                    class_name="space-y-1.5",
+                    class_name="flex flex-col",
                 ),
-                rx.el.div(
-                    rx.el.button(
-                        rx.el.span("Sign In to Portal"),
-                        rx.el.span(
-                            "arrow_forward",
-                            class_name=(
-                                "material-symbols-outlined text-[18px] "
-                                "group-hover:translate-x-0.5 transition-transform"
-                            ),
-                        ),
-                        type="submit",
-                        class_name=(
-                            "w-full primary-gradient text-on-primary font-bold py-4 rounded-lg "
-                            "shadow-lg shadow-primary/10 hover:brightness-110 active:scale-[0.98] "
-                            "transition-all flex items-center justify-center gap-2 group border-0 cursor-pointer"
-                        ),
+                rx.el.button(
+                    "SIGN IN",
+                    type="submit",
+                    class_name=(
+                        "w-full primary-gradient text-on-primary font-bold py-4 rounded-full "
+                        "text-sm tracking-widest uppercase shadow-lg shadow-primary/20 "
+                        "hover:brightness-110 active:scale-95 transition-all cursor-pointer border-0 mt-2"
                     ),
-                    class_name="pt-4",
                 ),
+                class_name="flex flex-col gap-5",
                 action="#",
-                class_name="space-y-6",
             ),
-            rx.el.footer(
-                rx.el.p(
-                    rx.el.span("Don't have an account? "),
-                    rx.link(
-                        "Apply for Access",
-                        href="/pricingpage",
-                        class_name="text-primary font-bold hover:underline",
-                    ),
-                    class_name="text-sm text-on-surface-variant",
-                ),
-                class_name="mt-8 pt-8 border-t border-outline-variant/10 text-center",
-            ),
-            class_name=(
-                "bg-surface-container-lowest rounded-xl p-10 editorial-shadow "
-                "border border-outline-variant/10"
-            ),
+            apply_link,
+            class_name="bg-white rounded-2xl p-10 shadow-sm w-full max-w-xl mx-auto",
             **props,
         )
 
 
 def login_form_card() -> rx.Component:
-    return LoginFormCardState.create()
+    return SignInTabState.create()

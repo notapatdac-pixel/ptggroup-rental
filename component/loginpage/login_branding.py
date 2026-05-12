@@ -1,15 +1,28 @@
 import reflex as rx
 
 
-def login_branding() -> rx.Component:
-    return rx.el.div(
-        rx.el.h1(
-            "PTG Retail Platform",
-            class_name="text-4xl font-headline italic text-primary mb-2",
+def login_mini_nav() -> rx.Component:
+    """Minimal top bar used on Sign In and Create Account pages."""
+    return rx.el.nav(
+        rx.hstack(
+            rx.link(
+                rx.hstack(
+                    rx.text("PTG", class_name="text-2xl font-serif font-bold text-lime-600"),
+                    rx.text(
+                        "Retail Platform",
+                        class_name="font-semibold text-on-surface tracking-tight text-base",
+                    ),
+                    class_name="flex items-center gap-1.5",
+                ),
+                href="/",
+                class_name="no-underline",
+            ),
+            rx.link(
+                "Back",
+                href="/",
+                class_name="auth-back-link text-on-surface text-sm font-medium no-underline",
+            ),
+            class_name="flex justify-between items-center w-full px-8 h-16",
         ),
-        rx.el.p(
-            "Access your retail workspace",
-            class_name="text-on-surface-variant font-body tracking-tight",
-        ),
-        class_name="text-center mb-10",
+        class_name="fixed top-0 w-full bg-auth-surface z-50",
     )

@@ -351,3 +351,46 @@ h3 {
 .border-outline-variant { border-color: var(--outline-variant); }
 .border-outline-variant\/10 { border-color: rgb(195 201 178 / 0.1); }
 .border-outline-variant\/20 { border-color: rgb(195 201 178 / 0.2); }
+.border-outline-variant\/30 { border-color: rgb(195 201 178 / 0.3); }
+.border-outline-variant\/40 { border-color: rgb(195 201 178 / 0.4); }
+
+/* Auth pages (Sign In, Create Account) — soft warm lime background */
+.bg-auth-surface { background-color: #EEF2E6; }
+
+/* Auth mini-nav Back link — underlined */
+.auth-back-link {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgb(25 28 28 / 0.35);
+}
+.auth-back-link:hover {
+  color: rgb(70 104 0);
+  text-decoration-color: rgb(70 104 0 / 0.6);
+}
+
+/* Checkout: override Tailwind bg for surface-container-low inputs */
+.bg-surface-container-low { background-color: var(--surface-container-low); }
+
+/* Lime utility overrides used in checkout/auth buttons */
+.bg-lime-500 { background-color: rgb(132 204 22); }
+.bg-lime-400 { background-color: rgb(163 230 53); }
+.bg-lime-600 { background-color: rgb(101 163 13); }
+.hover\:bg-lime-400:hover { background-color: rgb(163 230 53); }
+.active\:bg-lime-600:active { background-color: rgb(101 163 13); }
+
+/* Lime badge in Pro Plan summary */
+.bg-lime-200\/70 { background-color: rgb(217 249 157 / 0.7); }
+.text-lime-800 { color: rgb(63 98 18); }
+
+/* Tab toggle: keep surface-container as pill container background */
+.bg-surface-container { background-color: var(--surface-container); }
+
+/* Checkout plan summary: primary-container badge tint */
+.bg-primary-container\/40 { background-color: rgb(150 201 62 / 0.4); }
+.text-on-primary-container { color: var(--on-primary-container); }
+.text-on-primary { color: var(--on-primary); }
+.text-error { color: var(--error); }
+
+/* Stripe Card Element: remove default Stripe iframe outline on focus */
+.StripeElement--focus { outline: none; }
+.StripeElement--invalid { border-color: var(--error) !important; }

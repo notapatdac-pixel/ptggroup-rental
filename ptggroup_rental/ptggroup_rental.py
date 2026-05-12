@@ -4,6 +4,8 @@ from pages.landingpage.landingPage import landing_page
 from pages.loginpage.loginpage import login_page
 from pages.pricingpage.pricingPage import pricing_page
 from pages.stationdetailpage.stationDetailsPage import station_detail_page
+from pages.checkoutpage.checkoutPage import checkout_growth_page, checkout_pro_page
+from pages.createaccountpage.createAccountPage import create_account_page
 
 
 app = rx.App(
@@ -23,3 +25,6 @@ app.add_page(
     route="/stationdetailpage/[station_id]",
     title="PTG Retail Platform | Station",
 )
+app.add_page(checkout_growth_page, route="/checkoutpage/growth", title="PTG Retail Platform | Checkout — Growth Plan")
+app.add_page(checkout_pro_page, route="/checkoutpage/pro", title="PTG Retail Platform | Checkout — Pro Plan")
+app.add_page(create_account_page, route="/createaccountpage", title="PTG Retail Platform | Create Account")

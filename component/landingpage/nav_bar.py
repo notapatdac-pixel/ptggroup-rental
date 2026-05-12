@@ -24,10 +24,10 @@ def nav_bar(show_search: bool = False) -> rx.Component:
             href="/loginpage",
             class_name="btn-lime-ghost inline-flex items-center justify-center bg-transparent text-slate-600 dark:text-slate-400 font-sans text-sm px-4 py-2 border-0 cursor-pointer rounded-md transition-colors no-underline",
         ),
-        rx.el.button(
+        rx.link(
             "Get Started",
-            type="button",
-            class_name="inline-flex items-center justify-center primary-gradient text-white px-6 py-2.5 rounded-md text-sm font-bold shadow-sm border-0 cursor-pointer transition-all hover:shadow-lime-500/40 hover:ring-2 hover:ring-lime-300 hover:ring-offset-2 hover:ring-offset-white/80 active:scale-95",
+            href="/createaccountpage",
+            class_name="inline-flex items-center justify-center primary-gradient text-white px-6 py-2.5 rounded-md text-sm font-bold shadow-sm border-0 cursor-pointer transition-all hover:shadow-lime-500/40 hover:ring-2 hover:ring-lime-300 hover:ring-offset-2 hover:ring-offset-white/80 active:scale-95 no-underline",
         ),
         class_name="flex items-center gap-4",
     )
