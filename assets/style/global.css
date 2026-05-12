@@ -394,3 +394,177 @@ h3 {
 /* Stripe Card Element: remove default Stripe iframe outline on focus */
 .StripeElement--focus { outline: none; }
 .StripeElement--invalid { border-color: var(--error) !important; }
+
+/* ─── Retailer Backoffice ─────────────────────────────────────────── */
+:root {
+  --backoffice-primary: #2d5a1b;
+  --backoffice-primary-light: #4a7c2f;
+  --backoffice-surface: #f5f5ec;
+  --backoffice-search: #e8ead8;
+}
+
+.bg-backoffice-surface { background-color: var(--backoffice-surface); }
+.bg-backoffice-search  { background-color: var(--backoffice-search); }
+
+.text-backoffice-primary { color: var(--backoffice-primary); }
+.border-backoffice-primary { border-color: var(--backoffice-primary); }
+.bg-backoffice-primary\/5 { background-color: rgb(45 90 27 / 0.05); }
+.bg-backoffice-primary\/10 { background-color: rgb(45 90 27 / 0.1); }
+.bg-backoffice-primary { background-color: var(--backoffice-primary); }
+
+.backoffice-btn-primary {
+  background-color: var(--backoffice-primary);
+  color: #ffffff;
+  transition: background-color 0.15s ease;
+}
+.backoffice-btn-primary:hover { background-color: var(--backoffice-primary-light); }
+
+/* Bar chart bars (CSS-only, no JS) */
+.backoffice-bar {
+  background-color: var(--backoffice-primary-light);
+  border-radius: 3px 3px 0 0;
+  min-width: 18px;
+  display: inline-block;
+  align-self: flex-end;
+}
+.backoffice-bar-muted {
+  background-color: #d4d4c0;
+  border-radius: 3px 3px 0 0;
+  min-width: 18px;
+  display: inline-block;
+  align-self: flex-end;
+}
+
+/* Progress bar track */
+.backoffice-progress-track {
+  background-color: #d4d4c0;
+  border-radius: 9999px;
+  height: 6px;
+  width: 100%;
+  overflow: hidden;
+}
+.backoffice-progress-fill {
+  background-color: var(--backoffice-primary-light);
+  border-radius: 9999px;
+  height: 100%;
+}
+
+/* Donut ring (SVG-backed, set via inline style width) */
+.backoffice-donut-track { fill: none; stroke: #d4d4c0; }
+.backoffice-donut-fill  { fill: none; stroke: var(--backoffice-primary-light); stroke-linecap: round; }
+
+/* Status chips */
+.backoffice-chip-reviewing {
+  background-color: rgb(45 90 27 / 0.12);
+  color: var(--backoffice-primary);
+  border-radius: 9999px;
+  padding: 2px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.backoffice-chip-submitted {
+  background-color: rgb(70 104 0 / 0.10);
+  color: #466800;
+  border-radius: 9999px;
+  padding: 2px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.backoffice-chip-available {
+  background-color: rgb(45 90 27 / 0.12);
+  color: var(--backoffice-primary);
+  border-radius: 9999px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Unit cards in slot selection */
+.backoffice-unit-card {
+  border: 1.5px solid #d4d4c0;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.backoffice-unit-card--available {
+  border-color: var(--backoffice-primary);
+  background-color: rgb(45 90 27 / 0.05);
+}
+.backoffice-unit-card--occupied { opacity: 0.5; cursor: not-allowed; }
+.backoffice-unit-card--reserved { opacity: 0.6; border-style: dashed; cursor: not-allowed; }
+
+/* KPI card in dashboard/performance */
+.backoffice-kpi-card {
+  background-color: #ffffff;
+  border-radius: 14px;
+  padding: 20px 24px;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.06);
+}
+
+/* Dark green accent card */
+.backoffice-accent-card {
+  background-color: var(--backoffice-primary);
+  color: #ffffff;
+  border-radius: 14px;
+  padding: 20px 24px;
+}
+
+/* Time slot chips */
+.backoffice-time-chip {
+  border: 1.5px solid #d4d4c0;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--on-surface-variant);
+  background: white;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.backoffice-time-chip--active {
+  border-color: var(--backoffice-primary);
+  background-color: var(--backoffice-primary);
+  color: white;
+}
+
+/* Chat bubble */
+.backoffice-chat-bubble-agent {
+  background-color: #ffffff;
+  border-radius: 0 12px 12px 12px;
+  padding: 10px 14px;
+  max-width: 80%;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.backoffice-chat-bubble-user {
+  background-color: var(--backoffice-primary);
+  color: white;
+  border-radius: 12px 0 12px 12px;
+  padding: 10px 14px;
+  max-width: 80%;
+  font-size: 13px;
+  line-height: 1.5;
+  margin-left: auto;
+}
+
+/* Input underline style used in checkout/auth */
+.backoffice-input {
+  width: 100%;
+  background-color: white;
+  border: 1px solid #d4d4c0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--on-surface);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.backoffice-input:focus { border-color: var(--backoffice-primary); }
