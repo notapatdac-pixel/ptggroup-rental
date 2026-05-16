@@ -16,53 +16,41 @@ def _kpi_card(label: str, value: str, sub: str, growth: str = "") -> rx.Componen
     )
 
 
-def _bar(height: str, muted: bool = False) -> rx.Component:
-    cls = "backoffice-bar-muted" if muted else "backoffice-bar"
-    return rx.box(class_name=f"{cls} w-5", style={"height": height})
+_REVENUE_DATA = [
+    {"month": "Jan", "coffee": 55, "mart": 40},
+    {"month": "Feb", "coffee": 62, "mart": 48},
+    {"month": "Mar", "coffee": 70, "mart": 50},
+    {"month": "Apr", "coffee": 80, "mart": 58},
+    {"month": "May", "coffee": 90, "mart": 65},
+    {"month": "Jun", "coffee": 95, "mart": 72},
+]
 
 
 def _revenue_trend_chart() -> rx.Component:
-    bars_data = [
-        ("40px", True), ("55px", False), ("48px", True), ("62px", False),
-        ("50px", True), ("70px", False), ("58px", True), ("80px", False),
-        ("65px", True), ("90px", False), ("72px", True), ("95px", False),
-    ]
-    bars = [_bar(h, m) for h, m in bars_data]
     return rx.box(
         rx.hstack(
             rx.text("Revenue Trend", class_name="text-base font-bold text-on-surface"),
-            rx.hstack(
-                rx.box(class_name="w-3 h-3 rounded-full bg-backoffice-primary"),
-                rx.text("COFFEE CORNER", class_name="text-[10px] text-on-surface-variant"),
-                rx.box(class_name="w-3 h-3 rounded-full bg-backoffice-bar-muted bg-[#d4d4c0]"),
-                rx.text("QUICK MART", class_name="text-[10px] text-on-surface-variant"),
-                class_name="flex items-center gap-2",
-            ),
-            class_name="flex justify-between items-center mb-4",
+            rx.text("Performance by store (THB thousands)", class_name="text-xs text-on-surface-variant"),
+            class_name="flex justify-between items-center mb-2",
         ),
-        rx.text("Performance by store", class_name="text-xs text-on-surface-variant mb-4"),
-        rx.hstack(*bars, class_name="flex items-end gap-1.5 h-24"),
+        rx.recharts.responsive_container(
+            rx.recharts.bar_chart(
+                rx.recharts.cartesian_grid(stroke_dasharray="3 3", vertical=False, stroke="#f0f0e8"),
+                rx.recharts.x_axis(data_key="month"),
+                rx.recharts.y_axis(width=30),
+                rx.recharts.tooltip(),
+                rx.recharts.legend(),
+                rx.recharts.bar(data_key="coffee", fill="#466800", name="Coffee Corner", radius=3),
+                rx.recharts.bar(data_key="mart", fill="#d4d4c0", name="Quick Mart", radius=3),
+                data=_REVENUE_DATA,
+                bar_category_gap="40%",
+            ),
+            width="100%",
+            height=220,
+        ),
         class_name="bg-white rounded-2xl p-6 shadow-sm",
     )
 
-
-def _ai_tip_card() -> rx.Component:
-    return rx.box(
-        rx.text("AI INSIGHT", class_name="text-[10px] font-bold tracking-widest text-white/60 mb-2"),
-        rx.text(
-            "Coffee Corner is performing 15% above forecast.",
-            class_name="text-sm font-bold text-white mb-2 leading-snug",
-        ),
-        rx.text(
-            "Add seasonal menu items during 7–9am to capture high-density commuter traffic. Leveraging franchise incentives.",
-            class_name="text-xs text-white/80 mb-4 leading-relaxed",
-        ),
-        rx.el.button(
-            "Apply Suggested Strategy →",
-            class_name="bg-white text-backoffice-primary text-xs font-bold px-4 py-2 rounded-lg border-0 cursor-pointer",
-        ),
-        class_name="backoffice-accent-card",
-    )
 
 
 def _store_row(img_placeholder: str, name: str, loc: str, revenue: str, status: str, score: str) -> rx.Component:
@@ -84,32 +72,6 @@ def _store_row(img_placeholder: str, name: str, loc: str, revenue: str, status: 
         class_name="flex items-center gap-4 py-3 border-b border-outline-variant/20 last:border-0",
     )
 
-
-def _data_quality_donut() -> rx.Component:
-    r = 36
-    circ = 2 * 3.14159 * r
-    fill = circ * 0.92
-    return rx.box(
-        rx.text("Data Quality Score", class_name="text-sm font-bold text-on-surface mb-3"),
-        rx.el.svg(
-            rx.el.circle(cx="44", cy="44", r=str(r), class_name="backoffice-donut-track", stroke_width="8"),
-            rx.el.circle(
-                cx="44", cy="44", r=str(r), class_name="backoffice-donut-fill",
-                stroke_width="8",
-                stroke_dasharray=f"{fill:.1f} {circ:.1f}",
-                stroke_dashoffset=str(circ * 0.25),
-                transform="rotate(-90 44 44)",
-            ),
-            rx.el.text("92%", x="44", y="48", text_anchor="middle", font_size="14", font_weight="700", fill="#2d5a1b"),
-            width="88", height="88", view_box="0 0 88 88",
-        ),
-        rx.text("Optimal Health", class_name="text-xs text-on-surface-variant mt-2"),
-        rx.el.button(
-            "Submit Store Data",
-            class_name="backoffice-btn-primary text-xs font-bold px-4 py-2 rounded-lg border-0 cursor-pointer w-full mt-3",
-        ),
-        class_name="backoffice-kpi-card",
-    )
 
 
 def _traffic_distribution() -> rx.Component:
@@ -174,8 +136,7 @@ def retailer_dashboard_page_content() -> rx.Component:
                 _kpi_card("Monthly Revenue", "฿5k", "from last month", "+10% growth"),
                 _kpi_card("Daily Customers", "340", "avg/day", "+5% growth"),
                 _kpi_card("Active Stores", "2", "0 closed today"),
-                rx.box(class_name="flex-1"),
-                columns="4",
+                columns="3",
                 class_name="gap-4 mb-6",
             ),
             rx.grid(
@@ -192,14 +153,10 @@ def retailer_dashboard_page_content() -> rx.Component:
                         class_name="bg-white rounded-2xl p-6 shadow-sm mt-4",
                     ),
                     class_name="flex flex-col gap-0",
+                    style={"grid_column": "span 2"},
                 ),
-                rx.box(
-                    _ai_tip_card(),
-                    _data_quality_donut(),
-                    _traffic_distribution(),
-                    class_name="flex flex-col gap-4",
-                ),
-                columns="2",
+                _traffic_distribution(),
+                columns="3",
                 class_name="gap-6",
             ),
         ),

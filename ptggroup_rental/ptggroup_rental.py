@@ -18,6 +18,7 @@ from pages.retailer_backoffice.bookingConfirmPage import booking_confirm_page
 from pages.retailer_backoffice.exploreLocationPage import explore_location_page
 from pages.retailer_backoffice.slotSelectionPage import slot_selection_page
 from pages.retailer_backoffice.confirmApplyPage import confirm_apply_page
+from pages.retailer_backoffice.retailerProfileSetupPage import retailer_profile_setup_page
 from pages.landlord_backoffice.landlordOverviewPage import landlord_overview_page
 from pages.landlord_backoffice.landlordMyStationsPage import landlord_my_stations_page
 from pages.landlord_backoffice.landlordEditStationPage import landlord_edit_station_page
@@ -65,6 +66,7 @@ app.add_page(booking_confirm_page, route="/retailerbookingconfirm", title="PTG R
 app.add_page(explore_location_page, route="/retailerexplorelocation", title="PTG Retailer | Explore Location", on_load=_auth)
 app.add_page(slot_selection_page, route="/retailerslotselection", title="PTG Retailer | Slot Selection", on_load=_auth)
 app.add_page(confirm_apply_page, route="/retailerconfirmapply", title="PTG Retailer | Confirm & Apply", on_load=_auth)
+app.add_page(retailer_profile_setup_page, route="/retailerprofilesetup", title="PTG Retailer | Profile Setup", on_load=_auth)
 
 # ── Landlord Backoffice (auth-protected) ──────────────────────────────────
 _landlord_auth = AuthState.require_landlord_auth

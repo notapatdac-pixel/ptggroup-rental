@@ -16,7 +16,7 @@ def _peak_chip(label: str, active: bool = False) -> rx.Component:
 def submit_store_data_page_content() -> rx.Component:
     return backoffice_layout(
         "submit_data",
-        rx.grid(
+        rx.box(
             rx.box(
                 rx.heading("Submit Performance Data", as_="h1", class_name="text-2xl font-bold text-on-surface mb-8"),
                 rx.grid(
@@ -74,58 +74,7 @@ def submit_store_data_page_content() -> rx.Component:
                 rx.text("CONFIDENTIAL ENCRYPTED SUBMISSION", class_name="text-[10px] text-center text-on-surface-variant/50 tracking-widest uppercase mt-3"),
                 class_name="bg-white rounded-2xl p-8 shadow-sm",
             ),
-            rx.box(
-                rx.box(
-                    rx.text("Why Submit?", class_name="text-sm font-bold text-on-surface mb-4"),
-                    rx.vstack(
-                        rx.hstack(
-                            rx.el.span("benchmark", class_name="material-symbols-outlined text-backoffice-primary text-lg flex-shrink-0"),
-                            rx.box(
-                                rx.text("Precision Benchmarking", class_name="text-xs font-bold text-on-surface"),
-                                rx.text("See how your stores compare to competitors in the region.", class_name="text-xs text-on-surface-variant leading-relaxed"),
-                            ),
-                            class_name="flex items-start gap-3",
-                        ),
-                        rx.hstack(
-                            rx.el.span("psychology", class_name="material-symbols-outlined text-backoffice-primary text-lg flex-shrink-0"),
-                            rx.box(
-                                rx.text("AI Forecasting", class_name="text-xs font-bold text-on-surface"),
-                                rx.text("Power our ML models to predict future traffic and revenue.", class_name="text-xs text-on-surface-variant leading-relaxed"),
-                            ),
-                            class_name="flex items-start gap-3",
-                        ),
-                        rx.hstack(
-                            rx.el.span("lock", class_name="material-symbols-outlined text-backoffice-primary text-lg flex-shrink-0"),
-                            rx.box(
-                                rx.text("Data Sovereignty", class_name="text-xs font-bold text-on-surface"),
-                                rx.text("Your data is encrypted and aggregated, ensuring anonymity at all times.", class_name="text-xs text-on-surface-variant leading-relaxed"),
-                            ),
-                            class_name="flex items-start gap-3",
-                        ),
-                        class_name="gap-4",
-                    ),
-                    class_name="bg-white rounded-2xl p-6 shadow-sm mb-4",
-                ),
-                rx.box(
-                    rx.text("Contribution Stats", class_name="text-xs font-bold text-on-surface mb-3"),
-                    rx.hstack(
-                        rx.box(
-                            rx.text("24/30", class_name="text-2xl font-bold text-on-surface"),
-                            rx.text("Days submitted", class_name="text-[10px] text-on-surface-variant"),
-                        ),
-                        rx.box(
-                            rx.text("Top", class_name="text-xs text-on-surface-variant"),
-                            rx.text("15%", class_name="text-2xl font-bold text-backoffice-primary"),
-                            rx.text("PLATFORM\nRANKING", class_name="text-[9px] font-bold text-on-surface-variant tracking-widest"),
-                        ),
-                        class_name="flex gap-6",
-                    ),
-                    class_name="bg-white rounded-2xl p-5 shadow-sm",
-                ),
-            ),
-            columns="2",
-            class_name="gap-6",
-            style={"grid-template-columns": "2fr 1fr"},
+            class_name="w-full",
         ),
     )
 

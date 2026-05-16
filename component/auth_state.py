@@ -28,6 +28,7 @@ class AuthState(rx.State):
     login_error: str = ""
 
     nav_dropdown_open: bool = False
+    profile_complete: bool = False
 
     @rx.var
     def initials(self) -> str:
@@ -53,6 +54,8 @@ class AuthState(rx.State):
             self.password_input = ""
             if account["type"] == "landlord":
                 return rx.redirect("/landlorddashboard")
+            if not self.profile_complete:
+                return rx.redirect("/retailerprofilesetup")
             return rx.redirect("/retailerdashboard")
         self.login_error = "Invalid email or password."
 
@@ -73,6 +76,11 @@ class AuthState(rx.State):
         self.nav_dropdown_open = False
         if not self.logged_in or self.user_type != "landlord":
             return rx.redirect("/loginpage")
+
+    def complete_profile(self):
+        self.profile_complete = True
+        self.nav_dropdown_open = False
+        return rx.redirect("/retailerdashboard")
 
     def toggle_nav_dropdown(self):
         self.nav_dropdown_open = not self.nav_dropdown_open

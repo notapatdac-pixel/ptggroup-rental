@@ -27,6 +27,19 @@ def _profile_menu() -> rx.Component:
                 on_click=AuthState.close_nav_dropdown,
                 class_name="no-underline text-on-surface w-full block",
             ),
+            rx.cond(
+                AuthState.user_type == "retailer",
+                rx.link(
+                    rx.hstack(
+                        rx.el.span("manage_accounts", class_name="material-symbols-outlined text-base"),
+                        rx.text("Edit Profile", class_name="text-sm font-medium"),
+                        class_name="flex items-center gap-2 px-4 py-2.5 hover:bg-surface-container-low rounded-lg transition-colors",
+                    ),
+                    href="/retailerprofilesetup",
+                    on_click=AuthState.close_nav_dropdown,
+                    class_name="no-underline text-on-surface w-full block",
+                ),
+            ),
             rx.box(
                 rx.hstack(
                     rx.el.span("logout", class_name="material-symbols-outlined text-base"),

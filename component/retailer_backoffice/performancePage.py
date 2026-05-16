@@ -16,46 +16,39 @@ def _perf_kpi(label: str, value: str, sub: str = "", badge: str = "") -> rx.Comp
     )
 
 
-def _bar(height: str, muted: bool = False) -> rx.Component:
-    cls = "backoffice-bar-muted" if muted else "backoffice-bar"
-    return rx.box(class_name=f"{cls} w-8", style={"height": height})
+_MONTHLY_DATA = [
+    {"month": "JAN", "coffee": 98, "mart": 72},
+    {"month": "FEB", "coffee": 118, "mart": 82},
+    {"month": "MAR", "coffee": 105, "mart": 76},
+    {"month": "APR", "coffee": 130, "mart": 91},
+    {"month": "MAY", "coffee": 122, "mart": 87},
+    {"month": "JUN", "coffee": 165, "mart": 100},
+]
 
 
 def _monthly_revenue_chart() -> rx.Component:
-    months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN"]
-    pairs = [
-        ("55px", "40px"), ("65px", "45px"), ("58px", "42px"),
-        ("72px", "50px"), ("68px", "48px"), ("90px", "55px"),
-    ]
     return rx.box(
         rx.hstack(
             rx.box(
                 rx.text("Monthly Revenue by Store", class_name="text-base font-bold text-on-surface"),
-                rx.text("Comparative analysis across core retail units", class_name="text-xs text-on-surface-variant"),
+                rx.text("Comparative analysis across core retail units (THB thousands)", class_name="text-xs text-on-surface-variant"),
             ),
-            rx.hstack(
-                rx.box(class_name="w-3 h-3 rounded-full bg-backoffice-primary"),
-                rx.text("Coffee Corner", class_name="text-xs text-on-surface-variant"),
-                rx.box(class_name="w-3 h-3 rounded-full bg-[#d4d4c0]"),
-                rx.text("Quick Mart", class_name="text-xs text-on-surface-variant"),
-                class_name="flex items-center gap-2",
-            ),
-            class_name="flex justify-between items-start mb-6",
+            class_name="flex justify-between items-start mb-4",
         ),
-        rx.hstack(
-            *[
-                rx.vstack(
-                    rx.hstack(
-                        _bar(h1),
-                        _bar(h2, muted=True),
-                        class_name="flex items-end gap-1",
-                    ),
-                    rx.text(m, class_name="text-[9px] font-bold text-on-surface-variant tracking-wider"),
-                    class_name="flex flex-col items-center gap-1",
-                )
-                for (h1, h2), m in zip(pairs, months)
-            ],
-            class_name="flex items-end gap-6 h-24",
+        rx.recharts.responsive_container(
+            rx.recharts.bar_chart(
+                rx.recharts.cartesian_grid(stroke_dasharray="3 3", vertical=False, stroke="#f0f0e8"),
+                rx.recharts.x_axis(data_key="month"),
+                rx.recharts.y_axis(),
+                rx.recharts.tooltip(),
+                rx.recharts.legend(),
+                rx.recharts.bar(data_key="coffee", fill="#466800", name="Coffee Corner", radius=4),
+                rx.recharts.bar(data_key="mart", fill="#d4d4c0", name="Quick Mart", radius=4),
+                data=_MONTHLY_DATA,
+                bar_category_gap="40%",
+            ),
+            width="100%",
+            height=300,
         ),
         rx.box(
             rx.hstack(
@@ -67,63 +60,40 @@ def _monthly_revenue_chart() -> rx.Component:
                 rx.link("View Breakdown", href="#", class_name="text-xs font-bold text-backoffice-primary no-underline ml-auto"),
                 class_name="flex items-start gap-3",
             ),
-            class_name="mt-6 bg-surface-container-low rounded-xl p-4",
+            class_name="mt-4 bg-surface-container-low rounded-xl p-4",
         ),
         class_name="bg-white rounded-2xl p-6 shadow-sm",
     )
 
 
-def _efficiency_pulse() -> rx.Component:
-    metrics = [
-        ("Revenue vs Predicted", "118%", 100),
-        ("Customer Volume", "105%", 86),
-        ("Average Spend", "96%", 76),
-        ("Repeat Visit Rate", "112%", 92),
-    ]
-    return rx.box(
-        rx.hstack(
-            rx.text("Efficiency Pulse", class_name="text-sm font-bold text-on-surface"),
-            rx.el.span("bolt", class_name="material-symbols-outlined text-backoffice-primary text-base"),
-            class_name="flex items-center gap-1 mb-4",
-        ),
-        rx.vstack(
-            *[
-                rx.box(
-                    rx.hstack(
-                        rx.text(label, class_name="text-xs text-on-surface-variant flex-1"),
-                        rx.text(val, class_name="text-xs font-bold text-on-surface"),
-                        class_name="flex items-center mb-1",
-                    ),
-                    rx.box(
-                        rx.box(class_name="backoffice-progress-fill", style={"width": f"{pct}%"}),
-                        class_name="backoffice-progress-track",
-                    ),
-                    class_name="w-full",
-                )
-                for label, val, pct in metrics
-            ],
-            class_name="gap-3 w-full",
-        ),
-        class_name="backoffice-kpi-card",
-    )
+
+_TRAFFIC_DATA = [
+    {"day": "MON", "traffic": 35},
+    {"day": "TUE", "traffic": 42},
+    {"day": "WED", "traffic": 38},
+    {"day": "THU", "traffic": 50},
+    {"day": "FRI", "traffic": 55},
+    {"day": "SAT", "traffic": 90},
+    {"day": "SUN", "traffic": 40},
+]
 
 
 def _traffic_dist_chart() -> rx.Component:
-    bars = [("MON", "35px", True), ("TUE", "42px", True), ("WED", "38px", True),
-            ("THU", "50px", True), ("FRI", "55px", True), ("SAT", "90px", False), ("SUN", "40px", True)]
     return rx.box(
         rx.text("Traffic Distribution", class_name="text-sm font-bold text-on-surface mb-1"),
-        rx.text("Weekly yield distribution by volume", class_name="text-xs text-on-surface-variant mb-4"),
-        rx.hstack(
-            *[
-                rx.vstack(
-                    rx.box(class_name=f"{'backoffice-bar' if not m else 'backoffice-bar-muted'} w-7", style={"height": h}),
-                    rx.text(day, class_name="text-[9px] text-on-surface-variant"),
-                    class_name="flex flex-col items-center gap-1",
-                )
-                for day, h, m in bars
-            ],
-            class_name="flex items-end gap-1 h-24",
+        rx.text("Weekly customer volume by day", class_name="text-xs text-on-surface-variant mb-3"),
+        rx.recharts.responsive_container(
+            rx.recharts.bar_chart(
+                rx.recharts.cartesian_grid(stroke_dasharray="3 3", vertical=False, stroke="#f0f0e8"),
+                rx.recharts.x_axis(data_key="day"),
+                rx.recharts.y_axis(width=30),
+                rx.recharts.tooltip(),
+                rx.recharts.bar(data_key="traffic", fill="#466800", name="Customers", radius=3),
+                data=_TRAFFIC_DATA,
+                bar_category_gap="30%",
+            ),
+            width="100%",
+            height=220,
         ),
         class_name="backoffice-kpi-card",
     )
@@ -171,11 +141,7 @@ def performance_page_content() -> rx.Component:
             ),
             rx.grid(
                 _monthly_revenue_chart(),
-                rx.box(
-                    _efficiency_pulse(),
-                    _traffic_dist_chart(),
-                    class_name="flex flex-col gap-4",
-                ),
+                _traffic_dist_chart(),
                 columns="3",
                 class_name="gap-6",
                 style={"grid-template-columns": "2fr 1fr"},

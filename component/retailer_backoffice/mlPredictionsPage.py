@@ -3,88 +3,42 @@
 from component.retailer_backoffice.backoffice_layout import backoffice_layout
 
 
-def _bar_group(h_predicted: str, h_conservative: str, h_optimistic: str) -> rx.Component:
-    return rx.hstack(
-        rx.box(class_name="backoffice-bar w-7", style={"height": h_predicted}),
-        rx.box(class_name="backoffice-bar w-7", style={"height": h_conservative, "background-color": "#2d5a1b"}),
-        rx.box(class_name="backoffice-bar-muted w-7", style={"height": h_optimistic}),
-        class_name="flex items-end gap-0.5",
-    )
+_QUARTERLY_DATA = [
+    {"month": "JAN", "predicted": 65, "conservative": 40, "optimistic": 30},
+    {"month": "FEB", "predicted": 80, "conservative": 50, "optimistic": 38},
+    {"month": "MAR", "predicted": 95, "conservative": 60, "optimistic": 45},
+    {"month": "APR", "predicted": 72, "conservative": 45, "optimistic": 35},
+]
 
 
 def _quarterly_chart() -> rx.Component:
-    months = ["JAN", "FEB", "MAR", "APR"]
-    groups = [
-        ("65px", "40px", "30px"),
-        ("80px", "50px", "38px"),
-        ("95px", "60px", "45px"),
-        ("72px", "45px", "35px"),
-    ]
     return rx.box(
         rx.hstack(
             rx.box(
-                rx.text("Quarterly Forecast", class_name="text-xl font-bold text-backoffice-primary font-headline italic"),
-                rx.text("Analysis", class_name="text-xl font-bold text-backoffice-primary font-headline italic"),
+                rx.text("Quarterly Forecast Analysis", class_name="text-xl font-bold text-backoffice-primary font-headline italic"),
+                rx.text("Revenue projections across three confidence scenarios (THB millions)", class_name="text-xs text-on-surface-variant mt-1"),
             ),
-            rx.hstack(
-                rx.box(class_name="w-3 h-3 rounded-full bg-[#4a7c2f]"),
-                rx.text("Predicted", class_name="text-xs text-on-surface-variant"),
-                rx.box(class_name="w-3 h-3 rounded-full bg-[#2d5a1b]"),
-                rx.text("Conservative", class_name="text-xs text-on-surface-variant"),
-                rx.box(class_name="w-3 h-3 rounded-full bg-[#d4d4c0]"),
-                rx.text("Optimistic", class_name="text-xs text-on-surface-variant"),
-                class_name="flex items-center gap-2",
+            class_name="flex justify-between items-start mb-4",
+        ),
+        rx.recharts.responsive_container(
+            rx.recharts.bar_chart(
+                rx.recharts.cartesian_grid(stroke_dasharray="3 3", vertical=False, stroke="#f0f0e8"),
+                rx.recharts.x_axis(data_key="month"),
+                rx.recharts.y_axis(),
+                rx.recharts.tooltip(),
+                rx.recharts.legend(),
+                rx.recharts.bar(data_key="predicted", fill="#466800", name="Predicted", radius=4),
+                rx.recharts.bar(data_key="conservative", fill="#2d5a1b", name="Conservative", radius=4),
+                rx.recharts.bar(data_key="optimistic", fill="#c8d4b0", name="Optimistic", radius=4),
+                data=_QUARTERLY_DATA,
+                bar_category_gap="35%",
             ),
-            class_name="flex justify-between items-start mb-6",
-        ),
-        rx.hstack(
-            *[
-                rx.vstack(
-                    _bar_group(*g),
-                    rx.text(m, class_name="text-[9px] font-bold text-on-surface-variant tracking-wider"),
-                    class_name="flex flex-col items-center gap-1",
-                )
-                for g, m in zip(groups, months)
-            ],
-            class_name="flex items-end gap-8 h-28",
-        ),
-        class_name="bg-white rounded-2xl p-6 shadow-sm flex-1",
-    )
-
-
-def _velocity_marker(region: str, value: str, pct: int) -> rx.Component:
-    return rx.box(
-        rx.hstack(
-            rx.text(region, class_name="text-sm text-on-surface flex-1"),
-            rx.text(value, class_name="text-sm font-bold text-on-surface"),
-            class_name="flex items-center mb-1",
-        ),
-        rx.box(
-            rx.box(class_name="backoffice-progress-fill", style={"width": f"{pct}%"}),
-            class_name="backoffice-progress-track",
-        ),
-        class_name="w-full mb-3",
-    )
-
-
-def _regional_velocity() -> rx.Component:
-    return rx.box(
-        rx.text("Regional Velocity", class_name="text-base font-bold text-backoffice-primary font-headline italic mb-4"),
-        rx.text("Markers", class_name="text-base font-bold text-backoffice-primary font-headline italic -mt-3 mb-4"),
-        _velocity_marker("Bangkok Metropolis", "8.4x", 84),
-        _velocity_marker("Eastern Seaboard", "6.2x", 62),
-        _velocity_marker("Chiang Mai Cluster", "4.9x", 49),
-        _velocity_marker("Southern Tourism Hubs", "7.1x", 71),
-        rx.box(
-            rx.text("Regional Velocity", class_name="text-xs font-bold text-backoffice-primary mb-1"),
-            rx.text(
-                "Measures the speed of market penetration and repeat customer acquisition relative to national averages. Values above 5.0x indicate high potential for franchise expansion.",
-                class_name="text-xs text-on-surface-variant leading-relaxed",
-            ),
-            class_name="bg-surface-container-low rounded-xl p-4 mt-2",
+            width="100%",
+            height=380,
         ),
         class_name="bg-white rounded-2xl p-6 shadow-sm",
     )
+
 
 
 def _donut_accuracy() -> rx.Component:
@@ -169,13 +123,7 @@ def ml_predictions_page_content() -> rx.Component:
                 columns="3",
                 class_name="gap-4 mb-6",
             ),
-            rx.grid(
-                _quarterly_chart(),
-                _regional_velocity(),
-                columns="2",
-                class_name="gap-6",
-                style={"grid-template-columns": "2fr 1fr"},
-            ),
+            _quarterly_chart(),
         ),
     )
 
