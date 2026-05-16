@@ -1,5 +1,7 @@
 import reflex as rx
 
+from component.auth_state import AuthState
+
 _LABEL_CLS = "text-[10px] uppercase font-bold tracking-widest text-on-surface-variant mb-1.5 block"
 _INPUT_CLS = (
     "w-full bg-surface-container-low border-0 border-b-2 border-surface-container-highest "
@@ -64,6 +66,27 @@ class SignInTabState(rx.ComponentState):
             rx.fragment(),
         )
 
+        error_msg = rx.cond(
+            AuthState.login_error != "",
+            rx.box(
+                rx.text(AuthState.login_error, class_name="text-xs text-error font-semibold"),
+                class_name="bg-error/10 border border-error/20 rounded-lg px-4 py-2",
+            ),
+            rx.fragment(),
+        )
+
+        mock_hint = rx.box(
+            rx.text(
+                rx.cond(
+                    retailer_active,
+                    "Test: retailer@ptg.test / retailer123",
+                    "Test: landlord@ptg.test / landlord123",
+                ),
+                class_name="text-[10px] text-on-surface-variant/50 font-mono text-center",
+            ),
+            class_name="mt-2",
+        )
+
         return rx.box(
             rx.heading(
                 "Sign In",
@@ -71,12 +94,14 @@ class SignInTabState(rx.ComponentState):
                 class_name="font-headline text-3xl text-on-surface text-center mb-6",
             ),
             tab_toggle,
-            rx.el.form(
+            rx.el.div(
                 rx.el.div(
                     rx.el.label(email_label, class_name=_LABEL_CLS),
                     rx.el.input(
                         placeholder="name@company.com",
                         type="email",
+                        value=AuthState.email_input,
+                        on_change=AuthState.set_email,
                         class_name=_INPUT_CLS,
                     ),
                     class_name="flex flex-col",
@@ -97,21 +122,25 @@ class SignInTabState(rx.ComponentState):
                     rx.el.input(
                         placeholder="••••••••",
                         type="password",
+                        value=AuthState.password_input,
+                        on_change=AuthState.set_password,
                         class_name=_INPUT_CLS,
                     ),
                     class_name="flex flex-col",
                 ),
+                error_msg,
                 rx.el.button(
                     "SIGN IN",
-                    type="submit",
+                    type="button",
+                    on_click=AuthState.login,
                     class_name=(
                         "w-full primary-gradient text-on-primary font-bold py-4 rounded-full "
                         "text-sm tracking-widest uppercase shadow-lg shadow-primary/20 "
                         "hover:brightness-110 active:scale-95 transition-all cursor-pointer border-0 mt-2"
                     ),
                 ),
+                mock_hint,
                 class_name="flex flex-col gap-5",
-                action="#",
             ),
             apply_link,
             class_name="bg-white rounded-2xl p-10 shadow-sm w-full max-w-xl mx-auto",
