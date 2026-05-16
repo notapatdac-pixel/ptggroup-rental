@@ -20,130 +20,43 @@ def _kpi_card(label: str, value: str, delta: str, sub: str, positive: bool = Tru
     )
 
 
-def _dual_bar(gross_h: int, net_h: int, label: str) -> rx.Component:
-    return rx.vstack(
-        rx.hstack(
-            rx.box(class_name="w-4 rounded-t-sm", style={"height": f"{gross_h}px", "backgroundColor": "#e1e3e2", "alignSelf": "flex-end"}),
-            rx.box(class_name="w-4 rounded-t-sm", style={"height": f"{net_h}px", "backgroundColor": "#96c93e", "alignSelf": "flex-end"}),
-            class_name="flex items-end gap-0.5",
-        ),
-        rx.text(label, class_name="text-[9px] text-on-surface-variant mt-1"),
-        class_name="flex flex-col items-center gap-0",
-    )
+_REVENUE_DATA = [
+    {"day": "MON", "gross": 105, "net": 70},
+    {"day": "TUE", "gross": 118, "net": 79},
+    {"day": "WED", "gross": 140, "net": 98},
+    {"day": "THU", "gross": 196, "net": 154},
+    {"day": "FRI", "gross": 182, "net": 136},
+    {"day": "SAT", "gross": 154, "net": 112},
+    {"day": "SUN", "gross": 84, "net": 50},
+]
 
 
 def _revenue_chart() -> rx.Component:
-    days = [
-        ("MON", 38, 20), ("TUE", 42, 28), ("WED", 50, 35),
-        ("THU", 70, 55), ("FRI", 65, 48), ("SAT", 55, 40), ("SUN", 30, 18),
-    ]
     return rx.box(
         rx.hstack(
             rx.box(
                 rx.text("Filtered Revenue Trends", class_name="text-base font-bold text-on-surface"),
-                rx.text("Daily yield tracking across all primary corridors",
+                rx.text("Daily yield tracking across all primary corridors (THB thousands)",
                         class_name="text-xs text-on-surface-variant mt-0.5"),
             ),
-            rx.hstack(
-                rx.box(class_name="w-2.5 h-2.5 rounded-full", style={"backgroundColor": "#e1e3e2"}),
-                rx.text("GROSS YIELD", class_name="text-[10px] text-on-surface-variant"),
-                rx.box(class_name="w-2.5 h-2.5 rounded-full", style={"backgroundColor": "#96c93e"}),
-                rx.text("NET PROFIT", class_name="text-[10px] text-on-surface-variant"),
-                class_name="flex items-center gap-1.5",
+            class_name="flex justify-between items-start mb-4",
+        ),
+        rx.recharts.responsive_container(
+            rx.recharts.bar_chart(
+                rx.recharts.cartesian_grid(stroke_dasharray="3 3", vertical=False, stroke="#f0f0e8"),
+                rx.recharts.x_axis(data_key="day"),
+                rx.recharts.y_axis(width=30),
+                rx.recharts.tooltip(),
+                rx.recharts.legend(),
+                rx.recharts.bar(data_key="gross", fill="#344e00", name="Gross Yield", radius=4),
+                rx.recharts.bar(data_key="net", fill="#96c93e", name="Net Profit", radius=4),
+                data=_REVENUE_DATA,
+                bar_category_gap="35%",
             ),
-            class_name="flex justify-between items-start mb-5",
-        ),
-        rx.hstack(
-            *[_dual_bar(g, n, d) for d, g, n in days],
-            class_name="flex items-end gap-4",
+            width="100%",
+            height=320,
         ),
         class_name="bg-white rounded-2xl p-6 shadow-sm",
-    )
-
-
-def _dist_row(label: str, pct: int) -> rx.Component:
-    return rx.box(
-        rx.hstack(
-            rx.text(label, class_name="text-[11px] font-bold text-on-surface-variant flex-1"),
-            rx.text(f"{pct}%", class_name="text-[11px] font-bold text-on-surface"),
-            class_name="flex items-center mb-1.5",
-        ),
-        rx.box(
-            rx.box(class_name="backoffice-progress-fill h-full", style={"width": f"{pct}%"}),
-            class_name="backoffice-progress-track",
-        ),
-        class_name="mb-3 last:mb-0",
-    )
-
-
-def _space_distribution() -> rx.Component:
-    return rx.box(
-        rx.text("Space Distribution", class_name="text-base font-bold text-on-surface mb-1"),
-        rx.text("Monthly contribution by unit type", class_name="text-xs text-on-surface-variant mb-4"),
-        _dist_row("ANCHOR RETAIL", 42),
-        _dist_row("BOUTIQUE UNITS", 28),
-        _dist_row("POPUP / KIOSKS", 18),
-        _dist_row("DINING TERRACE", 12),
-        rx.box(
-            rx.text("PORTFOLIO HEALTH", class_name="text-[9px] font-bold tracking-widest text-on-surface-variant mb-1"),
-            rx.text("Low exposure to anchor churn; strong boutique growth.",
-                    class_name="text-xs text-on-surface-variant leading-relaxed"),
-            class_name="bg-surface-container-low rounded-xl p-4 mt-4",
-        ),
-        class_name="bg-white rounded-2xl p-6 shadow-sm",
-    )
-
-
-def _event_row(month: str, day: str, title: str, sub: str, accent: bool = False) -> rx.Component:
-    border_cls = "border-l-4 border-primary" if accent else "border-l-4 border-transparent"
-    return rx.hstack(
-        rx.box(
-            rx.text(month, class_name="text-[9px] font-bold text-on-surface-variant text-center"),
-            rx.text(day, class_name="text-lg font-bold text-on-surface text-center leading-tight"),
-            class_name="w-10 flex-shrink-0 text-center",
-        ),
-        rx.box(
-            rx.text(title, class_name="text-sm font-semibold text-on-surface"),
-            rx.text(sub, class_name="text-xs text-on-surface-variant"),
-            class_name="flex-1",
-        ),
-        rx.el.span("arrow_forward", class_name="material-symbols-outlined text-[18px] text-on-surface-variant"),
-        class_name=f"flex items-center gap-3 py-3 pl-3 pr-2 border-b border-outline-variant/20 last:border-0 {border_cls}",
-    )
-
-
-def _upcoming_events() -> rx.Component:
-    return rx.box(
-        rx.hstack(
-            rx.text("Upcoming Events", class_name="text-base font-bold text-on-surface"),
-            rx.link("View Calendar", href="#",
-                    class_name="text-sm font-bold text-primary no-underline hover:underline"),
-            class_name="flex justify-between items-center mb-2",
-        ),
-        _event_row("OCT", "12", "Rent due: Global Coffee Co.", "Auto-payment scheduled for unit A-12"),
-        _event_row("OCT", "15", "Lease review: Modish Wear", "Term expires in 60 days. Initial review set."),
-        _event_row("OCT", "18", "Maintenance check: HVAC Unit 4", "Quarterly inspection for South Wing", accent=True),
-        class_name="bg-white rounded-2xl p-6 shadow-sm",
-    )
-
-
-def _map_panel() -> rx.Component:
-    return rx.box(
-        rx.box(
-            rx.box(
-                rx.hstack(
-                    rx.box(class_name="w-2 h-2 rounded-full bg-secondary animate-pulse"),
-                    rx.text("LIVE UPDATES", class_name="text-[10px] font-bold tracking-widest text-secondary"),
-                    class_name="flex items-center gap-1.5",
-                ),
-                rx.text("Station Coverage", class_name="text-sm font-bold text-on-surface"),
-                rx.text("Northside & Downtown Corridor", class_name="text-xs text-on-surface-variant"),
-                class_name="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-xl p-3",
-            ),
-            class_name="relative w-full h-full",
-        ),
-        class_name="bg-inverse-surface rounded-2xl overflow-hidden relative",
-        style={"minHeight": "250px"},
     )
 
 
@@ -176,25 +89,12 @@ def landlord_revenue_page_content() -> rx.Component:
                 class_name="flex items-center justify-between mb-6",
             ),
             rx.grid(
-                _kpi_card("This Month", "142,500", "~12%", "vs. Last Month (127k)"),
-                _kpi_card("YTD Revenue", "1.24M", "~4.2%", "vs. Projections (1.19M)"),
-                _kpi_card("Avg Per Space", "3,840", "~-0.8%", "Market Avg: 3,660", positive=False),
-                _kpi_card("Occupancy", "94.2%", "", "Active: 48 / 51 Spaces", has_check=True),
-                columns="4",
+                _kpi_card("This Month", "฿4.2M", "~8.4%", "vs. Last Month (3.87M)"),
+                _kpi_card("YTD Revenue", "฿21M", "~4.2%", "vs. Projections (19.8M)"),
+                _kpi_card("Avg Per Space", "฿84,000", "~+7.1%", "Market Avg: ฿78,500"),
+                columns="3",
                 class_name="gap-4 mb-6",
             ),
-            rx.grid(
-                _revenue_chart(),
-                _space_distribution(),
-                columns="3",
-                class_name="gap-6 mb-6",
-                style={"gridTemplateColumns": "2fr 1fr"},
-            ),
-            rx.grid(
-                _upcoming_events(),
-                _map_panel(),
-                columns="2",
-                class_name="gap-6",
-            ),
+            _revenue_chart(),
         ),
     )

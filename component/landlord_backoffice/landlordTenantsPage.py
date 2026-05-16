@@ -2,44 +2,16 @@ import reflex as rx
 from component.landlord_backoffice.landlord_layout import landlord_layout
 
 
-def _summary_card(icon: str, label: str, value: str, sub: str, accent: bool = False) -> rx.Component:
-    if accent:
-        return rx.box(
-            rx.box(
-                rx.box(
-                    rx.el.span(icon, class_name="material-symbols-outlined text-[22px] text-white fill-icon"),
-                    class_name="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center",
-                ),
-                rx.box(
-                    rx.text("Excellent", class_name="text-[10px] font-bold tracking-wide text-white bg-white/20 px-2 py-0.5 rounded-full"),
-                ),
-                class_name="flex items-center justify-between mb-3",
-            ),
-            rx.text(label, class_name="text-[10px] font-bold tracking-widest uppercase text-white/70 mb-1"),
-            rx.text(value, class_name="text-3xl font-bold text-white"),
-            class_name="backoffice-accent-card flex-1",
-        )
+def _summary_card(icon: str, label: str, value: str, sub: str) -> rx.Component:
     return rx.box(
         rx.box(
             rx.el.span(icon, class_name="material-symbols-outlined text-[22px] text-on-surface-variant"),
             class_name="w-10 h-10 bg-surface-container rounded-xl flex items-center justify-center mb-3",
         ),
-        rx.text(label, class_name="text-[10px] font-bold tracking-widests uppercase text-on-surface-variant mb-1"),
+        rx.text(label, class_name="text-[10px] font-bold tracking-widest uppercase text-on-surface-variant mb-1"),
         rx.text(value, class_name="text-3xl font-bold text-on-surface"),
         rx.text(sub, class_name="text-xs text-backoffice-primary font-bold mt-1"),
         class_name="backoffice-kpi-card flex-1",
-    )
-
-
-def _score_bar(pct: int) -> rx.Component:
-    return rx.hstack(
-        rx.box(
-            rx.box(class_name="backoffice-progress-fill h-full", style={"width": f"{pct}%"}),
-            class_name="backoffice-progress-track",
-            style={"width": "50px"},
-        ),
-        rx.text(f"{pct}%", class_name="text-sm font-bold text-backoffice-primary"),
-        class_name="flex items-center gap-2",
     )
 
 
@@ -54,39 +26,33 @@ def _avatar(letter: str, color: str) -> rx.Component:
 def _tenant_row(
     letter: str, color: str, name: str, sub: str,
     btype: str, station: str, unit: str,
-    rent: str, score: int,
+    rent: str,
     expiry: str, months: str, urgent: bool = False,
 ) -> rx.Component:
     expiry_cls = "text-sm font-bold text-error" if urgent else "text-sm font-bold text-on-surface"
     months_cls = "text-xs text-error font-semibold" if urgent else "text-xs text-on-surface-variant"
     months_label = "Renewing Soon" if urgent else months
-    return rx.hstack(
+    return rx.box(
         rx.hstack(
             _avatar(letter, color),
             rx.box(
                 rx.text(name, class_name="text-sm font-bold text-on-surface"),
                 rx.text(sub, class_name="text-xs text-on-surface-variant"),
-                class_name="flex-1",
             ),
-            class_name="flex items-center gap-3 w-52",
+            class_name="flex items-center gap-3",
         ),
-        rx.box(
-            rx.text(btype, class_name="backoffice-chip-reviewing"),
-            class_name="w-32",
-        ),
+        rx.box(rx.text(btype, class_name="backoffice-chip-reviewing")),
         rx.box(
             rx.text(station, class_name="text-sm font-semibold text-on-surface"),
             rx.text(unit, class_name="text-xs text-on-surface-variant"),
-            class_name="w-36",
         ),
-        rx.text(f"{rent}/mo", class_name="text-sm font-bold text-on-surface w-24"),
-        _score_bar(score),
+        rx.text(f"฿{rent}/mo", class_name="text-sm font-bold text-on-surface"),
         rx.box(
             rx.text(expiry, class_name=expiry_cls),
             rx.text(months_label, class_name=months_cls),
-            class_name="w-32",
         ),
-        class_name="flex items-center gap-4 py-4 border-b border-outline-variant/20 last:border-0",
+        class_name="grid items-center gap-x-6 py-4 border-b border-outline-variant/20 last:border-0",
+        style={"gridTemplateColumns": "2fr 1fr 1.5fr 1.5fr 1.5fr"},
     )
 
 
@@ -118,9 +84,8 @@ def landlord_tenants_page_content() -> rx.Component:
             ),
             rx.grid(
                 _summary_card("groups", "Total Tenants", "7", "+1 this month"),
-                _summary_card("auto_awesome", "Avg. AI Score", "87%", "", accent=True),
                 _summary_card("event", "Upcoming Renewals", "2", "This quarter"),
-                columns="3",
+                columns="2",
                 class_name="gap-4 mb-8",
             ),
             rx.box(
@@ -133,34 +98,34 @@ def landlord_tenants_page_content() -> rx.Component:
                     ),
                     class_name="flex items-center justify-between mb-4",
                 ),
-                rx.hstack(
-                    rx.text("TENANT NAME", class_name="text-[10px] font-bold tracking-widests text-on-surface-variant w-52"),
-                    rx.text("BUSINESS TYPE", class_name="text-[10px] font-bold tracking-widest text-on-surface-variant w-32"),
-                    rx.text("STATION / UNIT", class_name="text-[10px] font-bold tracking-widest text-on-surface-variant w-36"),
-                    rx.text("RENT", class_name="text-[10px] font-bold tracking-widest text-on-surface-variant w-24"),
-                    rx.text("AI SCORE", class_name="text-[10px] font-bold tracking-widest text-on-surface-variant w-24"),
-                    rx.text("LEASE EXPIRY", class_name="text-[10px] font-bold tracking-widest text-on-surface-variant w-32"),
-                    class_name="flex items-center gap-4 pb-3 border-b border-outline-variant/20",
+                rx.box(
+                    rx.text("TENANT NAME", class_name="text-[10px] font-bold tracking-widest text-on-surface-variant"),
+                    rx.text("BUSINESS TYPE", class_name="text-[10px] font-bold tracking-widest text-on-surface-variant"),
+                    rx.text("STATION / UNIT", class_name="text-[10px] font-bold tracking-widest text-on-surface-variant"),
+                    rx.text("MONTHLY RENT", class_name="text-[10px] font-bold tracking-widest text-on-surface-variant"),
+                    rx.text("LEASE EXPIRY", class_name="text-[10px] font-bold tracking-widest text-on-surface-variant"),
+                    class_name="grid items-center gap-x-6 pb-3 border-b border-outline-variant/20",
+                    style={"gridTemplateColumns": "2fr 1fr 1.5fr 1.5fr 1.5fr"},
                 ),
                 _tenant_row(
                     "B", "#466800", "Bean & Uoast Co.", "Coffee & Bakery",
                     "Quick-Service", "PTG Main Station", "Unit A-12",
-                    "4,200", 92, "Oct 12, 2025", "18 months left",
+                    "124,000", "Oct 12, 2025", "18 months left",
                 ),
                 _tenant_row(
                     "E", "#737a66", "Eco-Mart Express", "Retail",
                     "Convenience", "PTG West Bypass", "Unit B-04",
-                    "3,850", 78, "May 30, 2024", "Renewing Soon", urgent=True,
+                    "42,000", "May 30, 2024", "Renewing Soon", urgent=True,
                 ),
                 _tenant_row(
                     "S", "#006e2d", "Sparkle Detailing", "Automotive Services",
                     "Service", "PTG North Hub", "Bay 02",
-                    "2,100", 89, "Jan 15, 2026", "21 months left",
+                    "88,000", "Jan 15, 2026", "21 months left",
                 ),
                 _tenant_row(
                     "G", "#96388e", "Green Garden Florals", "Retail",
                     "Boutique", "PTG Main Station", "Unit C-01",
-                    "1,450", 95, "July 04, 2025", "15 months left",
+                    "36,000", "July 04, 2025", "15 months left",
                 ),
                 rx.hstack(
                     rx.text("Showing 1 to 7 of 7 tenants",

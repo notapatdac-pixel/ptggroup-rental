@@ -2,14 +2,7 @@ import reflex as rx
 from component.landlord_backoffice.landlord_layout import landlord_layout
 
 
-def _summary_kpi(label: str, value: str, icon: str, sub: str, accent: bool = False) -> rx.Component:
-    if accent:
-        return rx.box(
-            rx.text(label, class_name="text-[10px] font-bold tracking-widest uppercase text-white/70 mb-1"),
-            rx.text(value, class_name="text-4xl font-bold text-white leading-tight"),
-            rx.text(sub, class_name="text-xs text-white/80 italic mt-1"),
-            class_name="backoffice-accent-card flex-1",
-        )
+def _summary_kpi(label: str, value: str, icon: str, sub: str) -> rx.Component:
     return rx.box(
         rx.hstack(
             rx.box(
@@ -20,18 +13,6 @@ def _summary_kpi(label: str, value: str, icon: str, sub: str, accent: bool = Fal
             ),
             rx.el.span(icon, class_name="material-symbols-outlined text-[36px] text-outline-variant/50"),
             class_name="flex items-start justify-between gap-2",
-        ),
-        class_name="backoffice-kpi-card flex-1",
-    )
-
-
-def _occupancy_kpi() -> rx.Component:
-    return rx.box(
-        rx.text("AVG. OCCUPANCY", class_name="text-[10px] font-bold tracking-widest uppercase text-on-surface-variant mb-1"),
-        rx.text("89%", class_name="text-4xl font-bold text-on-surface leading-tight mb-3"),
-        rx.box(
-            rx.box(class_name="backoffice-progress-fill h-full", style={"width": "89%"}),
-            class_name="backoffice-progress-track",
         ),
         class_name="backoffice-kpi-card flex-1",
     )
@@ -116,9 +97,8 @@ def landlord_my_stations_page_content() -> rx.Component:
             ),
             rx.grid(
                 _summary_kpi("Active Stations", "12", "ev_station", "+2 this quarter"),
-                _occupancy_kpi(),
-                _summary_kpi("Monthly Net Yield", "฿4.2M", "", "Surpassing forecast by 12.4%", accent=True),
-                columns="3",
+                _summary_kpi("AVG. OCCUPANCY", "94%", "apartment", "+1.8% vs. last month"),
+                columns="2",
                 class_name="gap-4 mb-8",
             ),
             rx.grid(

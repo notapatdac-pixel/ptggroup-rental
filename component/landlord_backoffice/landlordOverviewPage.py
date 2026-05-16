@@ -22,81 +22,59 @@ def _kpi_card(label: str, value: str, icon: str, badge: str, sub: str) -> rx.Com
     )
 
 
-def _rev_bar_group(gross_h: int, net_h: int, label: str) -> rx.Component:
-    return rx.vstack(
-        rx.hstack(
-            rx.box(class_name="w-4 rounded-t-sm", style={"height": f"{gross_h}px", "backgroundColor": "#344e00", "alignSelf": "flex-end"}),
-            rx.box(class_name="w-4 rounded-t-sm backoffice-bar", style={"height": f"{net_h}px", "alignSelf": "flex-end"}),
-            class_name="flex items-end gap-0.5",
-        ),
-        rx.text(label, class_name="text-[10px] text-on-surface-variant mt-1"),
-        class_name="flex flex-col items-center gap-0",
-    )
+_OV_REVENUE_DATA = [
+    {"month": "JAN", "gross": 58, "net": 42},
+    {"month": "FEB", "gross": 64, "net": 48},
+    {"month": "MAR", "gross": 90, "net": 68},
+    {"month": "APR", "gross": 82, "net": 62},
+    {"month": "MAY", "gross": 112, "net": 85},
+    {"month": "JUN", "gross": 76, "net": 56},
+]
 
 
 def _revenue_chart() -> rx.Component:
-    data = [
-        ("JAN", 58, 42), ("FEB", 64, 48), ("MAR", 90, 68),
-        ("APR", 82, 62), ("MAY", 112, 85), ("JUN", 76, 56),
-    ]
     return rx.box(
         rx.hstack(
             rx.text("Rental Revenue Trend", class_name="text-base font-bold text-on-surface"),
-            rx.hstack(
-                rx.box(class_name="w-2.5 h-2.5 rounded-full", style={"backgroundColor": "#344e00"}),
-                rx.text("Gross", class_name="text-[11px] text-on-surface-variant"),
-                rx.box(class_name="w-2.5 h-2.5 rounded-full", style={"backgroundColor": "#96c93e"}),
-                rx.text("Net", class_name="text-[11px] text-on-surface-variant"),
-                class_name="flex items-center gap-1.5",
-            ),
-            class_name="flex justify-between items-center mb-5",
+            rx.text("Monthly gross vs net (THB thousands)", class_name="text-xs text-on-surface-variant"),
+            class_name="flex justify-between items-center mb-4",
         ),
-        rx.hstack(
-            *[_rev_bar_group(g, n, m) for m, g, n in data],
-            class_name="flex items-end gap-5",
+        rx.recharts.responsive_container(
+            rx.recharts.bar_chart(
+                rx.recharts.cartesian_grid(stroke_dasharray="3 3", vertical=False, stroke="#f0f0e8"),
+                rx.recharts.x_axis(data_key="month"),
+                rx.recharts.y_axis(width=30),
+                rx.recharts.tooltip(),
+                rx.recharts.legend(),
+                rx.recharts.bar(data_key="gross", fill="#344e00", name="Gross", radius=4),
+                rx.recharts.bar(data_key="net", fill="#96c93e", name="Net", radius=4),
+                data=_OV_REVENUE_DATA,
+                bar_category_gap="40%",
+            ),
+            width="100%",
+            height=280,
         ),
         class_name="bg-white rounded-2xl p-6 shadow-sm",
     )
 
 
-def _unit_row(name: str, status: str) -> rx.Component:
-    is_occupied = status == "Occupied"
-    chip_cls = "bg-primary/10 text-primary" if is_occupied else "bg-error/10 text-error"
+def _station_card(station: str, location: str, badge: str, badge_cls: str) -> rx.Component:
     return rx.hstack(
-        rx.text(name, class_name="text-sm text-on-surface flex-1"),
-        rx.box(rx.text(status, class_name=f"text-[11px] font-bold px-2.5 py-0.5 rounded-full {chip_cls}")),
-        class_name="flex items-center gap-2 py-1.5",
-    )
-
-
-def _station_card(station: str, location: str, badge: str, badge_cls: str, units: list) -> rx.Component:
-    return rx.box(
-        rx.hstack(
-            rx.box(
-                rx.text(station, class_name="text-sm font-bold text-on-surface"),
-                rx.text(location, class_name="text-[11px] text-on-surface-variant"),
-            ),
-            rx.box(rx.text(badge, class_name=f"text-[11px] font-bold px-2 py-0.5 rounded-full {badge_cls}")),
-            class_name="flex items-start justify-between mb-2",
+        rx.box(
+            rx.text(station, class_name="text-sm font-bold text-on-surface"),
+            rx.text(location, class_name="text-[11px] text-on-surface-variant mt-0.5"),
         ),
-        *[_unit_row(n, s) for n, s in units],
-        class_name="border-b border-outline-variant/20 pb-3 mb-3 last:border-0 last:mb-0 last:pb-0",
+        rx.box(rx.text(badge, class_name=f"text-[11px] font-bold px-2.5 py-1 rounded-full {badge_cls}")),
+        class_name="flex items-center justify-between py-3 border-b border-outline-variant/20 last:border-0",
     )
 
 
 def _space_occupancy() -> rx.Component:
     return rx.box(
         rx.text("Space Occupancy", class_name="text-base font-bold text-on-surface mb-4"),
-        _station_card(
-            "Sukhumvit 62", "Bang Chak, Bangkok",
-            "8/10 Units", "bg-primary/10 text-primary",
-            [("Unit A-01 (Cafe)", "Occupied"), ("Unit B-04 (Retail)", "Vacant")],
-        ),
-        _station_card(
-            "Lat Phrao 71", "Wang Thonglang, Bangkok",
-            "100% Full", "bg-secondary/10 text-secondary",
-            [("Unit L-01 (Grocery)", "Occupied"), ("Unit L-02 (Pharmacy)", "Occupied")],
-        ),
+        _station_card("Sukhumvit 62", "Bang Chak, Bangkok", "8/10 Units", "bg-primary/10 text-primary"),
+        _station_card("Lat Phrao 71", "Wang Thonglang, Bangkok", "10/10 Units", "bg-secondary/10 text-secondary"),
+        _station_card("Rama IV", "Khlong Toei, Bangkok", "5/6 Units", "bg-primary/10 text-primary"),
         rx.link(
             "VIEW ALL ASSETS",
             href="/landlordstations",
@@ -108,18 +86,18 @@ def _space_occupancy() -> rx.Component:
 
 def _score_bar(score: int) -> rx.Component:
     return rx.hstack(
-        rx.text(str(score), class_name="text-sm font-bold text-on-surface w-6"),
+        rx.text(str(score), class_name="text-sm font-bold text-on-surface w-6 flex-shrink-0"),
         rx.box(
             rx.box(class_name="backoffice-progress-fill h-full", style={"width": f"{score}%"}),
             class_name="backoffice-progress-track flex-1",
         ),
-        class_name="flex items-center gap-2 w-28",
+        class_name="flex items-center gap-2",
     )
 
 
 def _app_row(name: str, sub: str, station: str, category: str, score: int, status: str) -> rx.Component:
     status_cls = "backoffice-chip-reviewing" if status == "Under Review" else "backoffice-chip-submitted"
-    return rx.hstack(
+    return rx.box(
         rx.hstack(
             rx.box(
                 rx.text(name[0].upper(), class_name="text-sm font-bold text-white"),
@@ -129,15 +107,14 @@ def _app_row(name: str, sub: str, station: str, category: str, score: int, statu
                 rx.text(name, class_name="text-sm font-semibold text-on-surface"),
                 rx.text(sub, class_name="text-xs text-on-surface-variant"),
             ),
-            class_name="flex items-center gap-3 flex-1",
+            class_name="flex items-center gap-3",
         ),
-        rx.text(station, class_name="text-sm text-on-surface w-36 flex-shrink-0"),
+        rx.text(station, class_name="text-sm text-on-surface"),
         rx.box(
             rx.text(category, class_name="text-[10px] font-bold tracking-wide text-on-surface-variant border border-outline-variant rounded-full px-2 py-0.5"),
-            class_name="w-32 flex-shrink-0",
         ),
         _score_bar(score),
-        rx.box(rx.text(status, class_name=status_cls), class_name="w-28 flex-shrink-0"),
+        rx.box(rx.text(status, class_name=status_cls)),
         rx.hstack(
             rx.box(
                 rx.el.span("check_circle", class_name="material-symbols-outlined text-[22px] fill-icon text-secondary"),
@@ -147,9 +124,10 @@ def _app_row(name: str, sub: str, station: str, category: str, score: int, statu
                 rx.el.span("cancel", class_name="material-symbols-outlined text-[22px] fill-icon text-error"),
                 class_name="cursor-pointer",
             ),
-            class_name="flex items-center gap-2",
+            class_name="flex items-center gap-2 justify-end",
         ),
-        class_name="flex items-center gap-4 py-3 border-b border-outline-variant/20 last:border-0",
+        class_name="grid items-center gap-x-6 py-3 border-b border-outline-variant/20 last:border-0",
+        style={"gridTemplateColumns": "2fr 1.5fr 1fr 1.2fr 1fr auto"},
     )
 
 
@@ -162,14 +140,15 @@ def _pending_applications() -> rx.Component:
                            class_name="text-[11px] font-bold tracking-wide text-primary bg-primary/10 px-3 py-1 rounded-full")),
             class_name="flex items-center justify-between mb-4",
         ),
-        rx.hstack(
-            rx.text("APPLICANT", class_name="text-[10px] font-bold tracking-widest text-on-surface-variant flex-1"),
-            rx.text("PROPOSED STATION", class_name="text-[10px] font-bold tracking-widest text-on-surface-variant w-36"),
-            rx.text("CATEGORY", class_name="text-[10px] font-bold tracking-widest text-on-surface-variant w-32"),
-            rx.text("SCORE", class_name="text-[10px] font-bold tracking-widest text-on-surface-variant w-28"),
-            rx.text("STATUS", class_name="text-[10px] font-bold tracking-widest text-on-surface-variant w-28"),
+        rx.box(
+            rx.text("APPLICANT", class_name="text-[10px] font-bold tracking-widest text-on-surface-variant"),
+            rx.text("PROPOSED STATION", class_name="text-[10px] font-bold tracking-widest text-on-surface-variant"),
+            rx.text("CATEGORY", class_name="text-[10px] font-bold tracking-widest text-on-surface-variant"),
+            rx.text("SCORE", class_name="text-[10px] font-bold tracking-widest text-on-surface-variant"),
+            rx.text("STATUS", class_name="text-[10px] font-bold tracking-widest text-on-surface-variant"),
             rx.text("ACTIONS", class_name="text-[10px] font-bold tracking-widest text-on-surface-variant"),
-            class_name="flex items-center gap-4 pb-2 border-b border-outline-variant/20",
+            class_name="grid items-center gap-x-6 pb-2 border-b border-outline-variant/20",
+            style={"gridTemplateColumns": "2fr 1.5fr 1fr 1.2fr 1fr auto"},
         ),
         _app_row("Artisan Brew Co.", "Kasemsawat S.", "Sukhumvit 62 (B-04)", "FOOD & BEVERAGE", 92, "Under Review"),
         _app_row("PureHealth Pharma", "Nongnooch T.", "Rama IV (C-02)", "WELLNESS", 88, "In Verification"),
@@ -221,10 +200,10 @@ def landlord_overview_page_content() -> rx.Component:
                 class_name="flex items-start justify-between mb-6",
             ),
             rx.grid(
-                _kpi_card("Total Revenue", "4.2M", "attach_money", "+8.4%", "VS LAST MONTH"),
+                _kpi_card("Total Revenue", "฿4.2M", "attach_money", "+8.4%", "VS LAST MONTH"),
                 _kpi_card("Occupancy", "94.2%", "apartment", "Optimal", "2 UNITS VACANT"),
                 _kpi_card("Pending Reviews", "12", "pending_actions", "4 Urgent", "EXPIRING SOON"),
-                _kpi_card("Avg. Tenant Score", "4.8/5", "star", "+0.2", "IMPROVED SENTIMENT"),
+                _kpi_card("Active Tenants", "7", "groups", "+1 this month", "ACTIVE LEASES"),
                 columns="4",
                 class_name="gap-4 mb-6",
             ),

@@ -2,28 +2,6 @@ import reflex as rx
 from component.landlord_backoffice.landlord_layout import landlord_layout
 
 
-def _financial_bar(fill: int) -> rx.Component:
-    return rx.box(
-        rx.box(class_name="backoffice-progress-fill h-full", style={"width": f"{fill}%"}),
-        class_name="backoffice-progress-track",
-        style={"width": "32px", "height": "6px"},
-    )
-
-
-def _financial_health() -> rx.Component:
-    return rx.box(
-        rx.text("FINANCIAL HEALTH", class_name="text-[9px] font-bold tracking-widest text-on-surface-variant mb-2"),
-        rx.hstack(
-            _financial_bar(90),
-            _financial_bar(75),
-            _financial_bar(85),
-            _financial_bar(60),
-            class_name="flex gap-1.5",
-        ),
-        class_name="bg-surface-container-low rounded-xl p-3",
-    )
-
-
 def _ai_badge() -> rx.Component:
     return rx.hstack(
         rx.el.span("auto_awesome", class_name="material-symbols-outlined text-[14px] text-primary fill-icon"),
@@ -34,32 +12,53 @@ def _ai_badge() -> rx.Component:
 
 def _applicant_card(
     name: str,
+    store_name: str,
     category: str,
     experience: str,
     ai_score: str,
     ai_score_color: str,
     ai_text: str,
     revenue: str,
-    traffic: str,
     image_placeholder_color: str,
 ) -> rx.Component:
     return rx.box(
         rx.hstack(
-            # Left: portrait photo placeholder
+            # Left: portrait image panel
             rx.box(
                 rx.box(
-                    rx.box(
-                        rx.text(category, class_name="text-[10px] font-bold text-white bg-on-surface/70 px-2.5 py-1 rounded-full"),
-                        class_name="absolute bottom-12 left-4",
+                    rx.text(
+                        category,
+                        class_name="text-[10px] font-bold text-white bg-black/50 backdrop-blur-sm px-2.5 py-1 rounded-full",
                     ),
-                    rx.text(name, class_name="absolute bottom-4 left-4 text-lg font-bold text-white"),
-                    class_name="relative w-full h-full",
+                    class_name="absolute top-4 left-4 z-10",
                 ),
-                class_name="w-48 flex-shrink-0 rounded-l-2xl relative overflow-hidden",
-                style={"backgroundColor": image_placeholder_color, "minHeight": "220px"},
+                rx.box(
+                    rx.text(store_name, class_name="text-base font-bold text-white leading-tight"),
+                    rx.hstack(
+                        rx.el.span("person", class_name="material-symbols-outlined text-[13px] text-white/70"),
+                        rx.text(name, class_name="text-xs text-white/80"),
+                        class_name="flex items-center gap-1 mt-1",
+                    ),
+                    class_name=(
+                        "absolute bottom-0 left-0 right-0 px-4 py-4 z-10 "
+                        "bg-gradient-to-t from-black/70 to-transparent"
+                    ),
+                ),
+                class_name="w-52 flex-shrink-0 rounded-l-2xl relative overflow-hidden self-stretch",
+                style={"backgroundColor": image_placeholder_color},
             ),
             # Right: details
             rx.box(
+                rx.hstack(
+                    rx.box(
+                        rx.text(store_name, class_name="text-lg font-bold text-on-surface"),
+                        rx.text(name, class_name="text-xs text-on-surface-variant mt-0.5"),
+                    ),
+                    rx.box(
+                        rx.text(category, class_name="text-[10px] font-bold tracking-wide text-primary border border-primary/30 bg-primary/5 px-2.5 py-1 rounded-full"),
+                    ),
+                    class_name="flex items-start justify-between mb-5",
+                ),
                 rx.grid(
                     rx.box(
                         rx.text("EXPERIENCE", class_name="text-[9px] font-bold tracking-widest text-on-surface-variant mb-0.5"),
@@ -78,23 +77,13 @@ def _applicant_card(
                         rx.text(revenue, class_name="text-base font-bold text-on-surface"),
                         rx.text("THB/mo", class_name="text-[10px] text-on-surface-variant"),
                     ),
-                    rx.box(
-                        rx.text("FOOT TRAFFIC", class_name="text-[9px] font-bold tracking-widest text-on-surface-variant mb-0.5"),
-                        rx.text(traffic, class_name="text-base font-bold text-backoffice-primary"),
-                        rx.text("impact", class_name="text-[10px] text-on-surface-variant"),
-                    ),
-                    columns="4",
+                    columns="3",
                     class_name="gap-6 mb-4",
                 ),
-                rx.grid(
-                    rx.box(
-                        _ai_badge(),
-                        rx.text(ai_text, class_name="text-sm text-on-surface-variant leading-relaxed"),
-                        class_name="bg-surface-container-low rounded-xl p-4",
-                    ),
-                    _financial_health(),
-                    columns="2",
-                    class_name="gap-4 mb-4",
+                rx.box(
+                    _ai_badge(),
+                    rx.text(ai_text, class_name="text-sm text-on-surface-variant leading-relaxed"),
+                    class_name="bg-surface-container-low rounded-xl p-4 mb-4",
                 ),
                 rx.hstack(
                     rx.el.button(
@@ -112,7 +101,7 @@ def _applicant_card(
                 ),
                 class_name="flex-1 p-6 flex flex-col justify-between",
             ),
-            class_name="flex",
+            class_name="flex items-stretch",
         ),
         class_name="bg-white rounded-2xl shadow-sm overflow-hidden mb-5",
     )
@@ -146,25 +135,37 @@ def landlord_applications_page_content() -> rx.Component:
                 class_name="flex items-start justify-between mb-8",
             ),
             _applicant_card(
-                "Wanida Suthep", "ARTISAN CAFE",
-                "12 Years", "89%", "text-backoffice-primary",
-                "High potential for morning commuter synergy. Proximity to EV chargers aligns with customer dwell times of 20-30 minutes.",
-                "14.2k", "+18%",
-                "#4a5568",
+                name="Wanida Suthep",
+                store_name="The Artisan Brew",
+                category="ARTISAN CAFE",
+                experience="12 Years",
+                ai_score="89%",
+                ai_score_color="text-backoffice-primary",
+                ai_text="High potential for morning commuter synergy. Proximity to EV chargers aligns with customer dwell times of 20-30 minutes.",
+                revenue="14,200",
+                image_placeholder_color="#4a5568",
             ),
             _applicant_card(
-                "Tanaka Foods Co.", "PREMIUM RETAIL",
-                "25 Years", "94%", "text-secondary",
-                "Enterprise-grade tenant with stable long-term outlook. Ideal for high-density residential surroundings.",
-                "32.8k", "+31%",
-                "#744210",
+                name="Tanaka Foods Co.",
+                store_name="Tanaka Premium Market",
+                category="PREMIUM RETAIL",
+                experience="25 Years",
+                ai_score="94%",
+                ai_score_color="text-secondary",
+                ai_text="Enterprise-grade tenant with stable long-term outlook. Ideal for high-density residential surroundings.",
+                revenue="32,800",
+                image_placeholder_color="#744210",
             ),
             _applicant_card(
-                "PharmaCare Ltd.", "PHARMACY",
-                "8 Years", "76%", "text-on-surface-variant",
-                "Service-oriented anchor. May require specialized ventilation and security infrastructure upgrades.",
-                "21.5k", "+12%",
-                "#1a4a5e",
+                name="PharmaCare Ltd.",
+                store_name="PharmaPlus Express",
+                category="PHARMACY",
+                experience="8 Years",
+                ai_score="76%",
+                ai_score_color="text-on-surface-variant",
+                ai_text="Service-oriented anchor. May require specialized ventilation and security infrastructure upgrades.",
+                revenue="21,500",
+                image_placeholder_color="#1a4a5e",
             ),
         ),
     )
